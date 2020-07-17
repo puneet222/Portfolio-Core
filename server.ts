@@ -1,6 +1,11 @@
 import express from 'express';
+const connectDB = require('./config/db');
 
 const app = express();
+
+// connect DB
+connectDB();
+
 const PORT = process.env.port || 5000;
 
 app.get('/', (req, res) => {
