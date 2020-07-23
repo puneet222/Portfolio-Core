@@ -20,6 +20,7 @@ app.get('/', (req, res) => {
 app.use('/api/user', require('./routes/user'));
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/info', require('./routes/info'));
+app.use('/api/skill', require('./routes/skill'));
 
 app.listen(PORT, () => {
     return console.log(`server is listening on ${PORT}`);
