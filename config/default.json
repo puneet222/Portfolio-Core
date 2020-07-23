@@ -1,3 +1,4 @@
 {
-    "mongoURI": "mongodb+srv://puneet222:incorrect1@cluster0.12m98.mongodb.net/<dbname>?retryWrites=true&w=majority"
+    "mongoURI": "mongodb+srv://puneet222:incorrect1@cluster0.12m98.mongodb.net/<dbname>?retryWrites=true&w=majority",
+    "jwtSecret": "token999"
 }
