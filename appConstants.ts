@@ -5,6 +5,8 @@ export const NO_PASSWORD_MESSAGE: string = "Please provide a password";
 export const INTERNAL_SERVER_ERROR: string = "Internal Server Error";
 export const USER_EXISTS: string = "User already exists";
 export const NO_NAME_MESSAGE: string = "Please provide a name";
+export const NO_TOKEN_MESSAGE: string = "No token, authorization denied";
+export const UNAUTHORIZED: string = "Unauthorized";
 
 
 export const NAME: string = "name";

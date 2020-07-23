@@ -10,13 +10,20 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const config = require('config');
 const User = require('../models/User');
+const auth = require('../middleware/auth');
 
 // @route       GET api/auth
 // @desc        Get logged in User
 // @access      Private
 
-router.get('/', (req: Request, res: Response) => {
-    res.send("Get Logged in user")
+router.get('/', auth, async (req: any, res: any) => {
+    try {
+        const user: IUser = await User.findById(req.user.id).select('-password');
+        res.json(user);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).json({ msg: INTERNAL_SERVER_ERROR });
+    }
 });
 
 // @route       POST api/auth
