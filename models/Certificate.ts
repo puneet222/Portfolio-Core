@@ -35,4 +35,4 @@ const certificateSchema: Schema = new Schema({
 });
 
 //Export the model
-module.exports = mongoose.model<ICertificate>('Certificate', certificateSchema);
+export default mongoose.model<ICertificate>('Certificate', certificateSchema);
