@@ -1,4 +1,8 @@
-import { Response } from "express";
+import express, { Request, Response, Router } from 'express';
+import * as bcrypt from 'bcryptjs';
+import * as config from 'config';
+import * as jwt from 'jsonwebtoken';
+import { check, validationResult, Result, ValidationError } from 'express-validator';
 import {
     INVALID_EMAIL_MESSAGE,
     INVALID_PASSWORD_MESSAGE,
@@ -9,41 +13,43 @@ import {
     EMAIL,
     PASSWORD
 } from "../appConstants";
+import User, { IUser } from '../models/User';
+import AuthMiddleware from '../middleware/auth';
 
-const express = require('express');
-const router = express.Router();
-const { check, validationResult } = require('express-validator');
-const bcrypt = require('bcryptjs');
-const config = require('config');
-const jwt = require('jsonwebtoken');
-const User = require('../models/User');
+export const userRouter: Router = express.Router();
 
 // @route       GET api/user
 // @desc        Get users
 // @access      Private
 
-router.get('/', (req: Request, res: Response) => {
-    res.send(req.body);
+userRouter.get('/', AuthMiddleware, async (req: Request, res: Response) => {
+    try {
+        const users: Array<IUser> = await User.find({});
+        res.json(users);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).json({ msg: INTERNAL_SERVER_ERROR });
+    }
 });
 
 // @route       POST api/user
 // @desc        Add users
 // @access      Private
 
-router.post('/', [
+userRouter.post('/', [
     check(NAME, NO_NAME_MESSAGE).not().isEmpty(),
     check(EMAIL, INVALID_EMAIL_MESSAGE).isEmail(),
     check(PASSWORD, INVALID_PASSWORD_MESSAGE).isLength({ min: 6 })
 ],
     async (req: Request, res: Response) => {
-        const errors = validationResult(req);
+        const errors: Result<ValidationError> = validationResult(req);
         if (!errors.isEmpty()) {
             return res.status(400).json({ errors: errors.array() })
         }
-        const { name, email, password } = <any>req.body;
+        const { name, email, password } = req.body;
 
         try {
-            let user = await User.findOne({ email });
+            let user: any = await User.findOne({ email });
             if (user) {
                 return res.status(400).json({ msg: USER_EXISTS });
             }
@@ -54,13 +60,13 @@ router.post('/', [
                 password
             });
 
-            const salt = await bcrypt.genSalt(10);
+            const salt: string = await bcrypt.genSalt(10);
 
             user.password = await bcrypt.hash(password, salt);
 
             await user.save();
 
-            const payload = {
+            const payload: Object = {
                 user: {
                     id: <String>user.id
                 }
@@ -68,15 +74,14 @@ router.post('/', [
 
             jwt.sign(payload, config.get('jwtSecret'), {
                 expiresIn: 3600000
-            }, (err: Error, token: String) => {
+            }, (err: any, token: any) => {
                 if (err) throw err;
                 res.json({ token })
             }
             );
 
         } catch (error) {
+            console.error(error.message);
             res.status(500).json({ msg: INTERNAL_SERVER_ERROR });
         }
     });
-
-module.exports = router;

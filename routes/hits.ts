@@ -1,10 +1,9 @@
 import express, { Router, Request, Response } from 'express';
 import { INTERNAL_SERVER_ERROR, UPDATE_SUCCESS } from "../appConstants";
 import Hits, { IHits } from "../models/Hits";
+import AuthMiddleware from "../middleware/auth";
 
 export const hitsRouter: Router = express.Router();
-
-const auth = require('../middleware/auth');
 
 // @route       GET api/hits
 // @desc        Get Hits
@@ -51,7 +50,7 @@ hitsRouter.post('/', async (req: Request, res: Response) => {
 // @desc        Delete Hits
 // @access      private
 
-hitsRouter.delete('/', auth, async (req: Request, res: Response) => {
+hitsRouter.delete('/', AuthMiddleware, async (req: Request, res: Response) => {
     try {
         const { _id } = req.body;
         await Hits.deleteOne({ _id });

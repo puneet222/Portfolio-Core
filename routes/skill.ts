@@ -1,10 +1,9 @@
 import express, { Router, Request, Response } from "express";
 import { INTERNAL_SERVER_ERROR, UPDATE_SUCCESS } from "../appConstants";
 import Skill, { ISkill } from "../models/Skill";
+import AuthMiddleware from "../middleware/auth";
 
 export const skillRouter: Router = express.Router();
-
-const auth = require('../middleware/auth');
 
 // @route       GET api/skill
 // @desc        Get Skills
@@ -24,7 +23,7 @@ skillRouter.get('/', async (req: Request, res: Response) => {
 // @desc        Create Skill
 // @access      private
 
-skillRouter.post('/', auth, async (req: Request, res: Response) => {
+skillRouter.post('/', AuthMiddleware, async (req: Request, res: Response) => {
     try {
         const {
             name,
@@ -49,7 +48,7 @@ skillRouter.post('/', auth, async (req: Request, res: Response) => {
 // @desc        UPDATE Skill
 // @access      private
 
-skillRouter.put('/', auth, async (req: Request, res: Response) => {
+skillRouter.put('/', AuthMiddleware, async (req: Request, res: Response) => {
     try {
         const {
             name,
@@ -75,7 +74,7 @@ skillRouter.put('/', auth, async (req: Request, res: Response) => {
 // @desc        Delete Skill
 // @access      private
 
-skillRouter.delete('/', auth, async (req: Request, res: Response) => {
+skillRouter.delete('/', AuthMiddleware, async (req: Request, res: Response) => {
     try {
         const { _id } = req.body;
         await Skill.deleteOne({ _id });

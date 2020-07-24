@@ -1,10 +1,9 @@
 import express, { Router, Request, Response } from 'express';
 import { INTERNAL_SERVER_ERROR, UPDATE_SUCCESS } from "../appConstants";
 import Job, { IJob } from "../models/Job";
+import AuthMiddleware from "../middleware/auth";
 
 export const jobRouter: Router = express.Router();
-
-const auth = require('../middleware/auth');
 
 // @route       GET api/job
 // @desc        Get Jobs
@@ -24,7 +23,7 @@ jobRouter.get('/', async (req: Request, res: Response) => {
 // @desc        Create Job
 // @access      private
 
-jobRouter.post('/', auth, async (req: Request, res: Response) => {
+jobRouter.post('/', AuthMiddleware, async (req: Request, res: Response) => {
     try {
         const {
             company,
@@ -57,7 +56,7 @@ jobRouter.post('/', auth, async (req: Request, res: Response) => {
 // @desc        UPDATE Job
 // @access      private
 
-jobRouter.put('/', auth, async (req: Request, res: Response) => {
+jobRouter.put('/', AuthMiddleware, async (req: Request, res: Response) => {
     try {
         const {
             company,
@@ -91,7 +90,7 @@ jobRouter.put('/', auth, async (req: Request, res: Response) => {
 // @desc        Delete Job
 // @access      private
 
-jobRouter.delete('/', auth, async (req: Request, res: Response) => {
+jobRouter.delete('/', AuthMiddleware, async (req: Request, res: Response) => {
     try {
         const { _id } = req.body;
         await Job.deleteOne({ _id });

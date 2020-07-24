@@ -5,11 +5,9 @@ import * as bcrypt from 'bcryptjs';
 import * as jwt from 'jsonwebtoken';
 import { INVALID_EMAIL_MESSAGE, EMAIL, PASSWORD, NO_PASSWORD_MESSAGE, INVALID_CREDENTIALS, INTERNAL_SERVER_ERROR } from "../appConstants";
 import User, { IUser } from "../models/User";
-// import { AuthMiddleware } from "../middleware/auth";
+import AuthMiddleware from "../middleware/auth";
 
-const router: Router = express.Router();
-
-const auth = require('../middleware/auth');
+export const authRouter: Router = express.Router();
 
 export interface JWTPayload {
     user: Object;
@@ -19,7 +17,7 @@ export interface JWTPayload {
 // @desc        Get logged in User
 // @access      Private
 
-router.get('/', auth, async (req: any, res: any) => {
+authRouter.get('/', AuthMiddleware, async (req: any, res: Response) => {
     try {
         const user: IUser | null = await User.findById(req.user.id).select('-password');
         res.json(user);
@@ -33,7 +31,7 @@ router.get('/', auth, async (req: any, res: any) => {
 // @desc        Auth user get token
 // @access      Public
 
-router.post('/', [
+authRouter.post('/', [
     check(EMAIL, INVALID_EMAIL_MESSAGE).isEmail(),
     check(PASSWORD, NO_PASSWORD_MESSAGE).exists()
 ], async (req: Request, res: Response) => {
@@ -74,5 +72,3 @@ router.post('/', [
         res.status(500).json({ msg: INTERNAL_SERVER_ERROR });
     }
 });
-
-module.exports = router;

@@ -1,11 +1,9 @@
 import express, { Router, Request, Response } from "express";
 import { INTERNAL_SERVER_ERROR, UPDATE_SUCCESS } from "../appConstants";
 import Project, { IProject } from "../models/Project";
-
+import AuthMiddleware from "../middleware/auth";
 
 export const projectRouter: Router = express.Router();
-
-const auth = require('../middleware/auth');
 
 // @route       GET api/project
 // @desc        Get Projects
@@ -25,7 +23,7 @@ projectRouter.get('/', async (req: Request, res: Response) => {
 // @desc        Create Project
 // @access      private
 
-projectRouter.post('/', auth, async (req: Request, res: Response) => {
+projectRouter.post('/', AuthMiddleware, async (req: Request, res: Response) => {
     try {
         const {
             name,
@@ -60,7 +58,7 @@ projectRouter.post('/', auth, async (req: Request, res: Response) => {
 // @desc        UPDATE Project
 // @access      private
 
-projectRouter.put('/', auth, async (req: Request, res: Response) => {
+projectRouter.put('/', AuthMiddleware, async (req: Request, res: Response) => {
     try {
         const {
             name,
@@ -96,7 +94,7 @@ projectRouter.put('/', auth, async (req: Request, res: Response) => {
 // @desc        Delete Project
 // @access      private
 
-projectRouter.delete('/', auth, async (req: Request, res: Response) => {
+projectRouter.delete('/', AuthMiddleware, async (req: Request, res: Response) => {
     try {
         const { _id } = req.body;
         await Project.deleteOne({ _id });
