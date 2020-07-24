@@ -3,8 +3,11 @@ import express, { Request, Response } from 'express';
 import * as jwt from 'jsonwebtoken';
 const config = require('config');
 
+export interface User {
+    id: string;
+}
 export interface MiddlewareRequest extends Request {
-    user?: Object;
+    user?: User;
 }
 
 const AuthMiddleware = (req: MiddlewareRequest, res: Response, next: express.NextFunction) => {
