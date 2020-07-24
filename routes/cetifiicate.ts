@@ -1,18 +1,18 @@
+import express, { Router, Request, Response } from 'express';
 import { INTERNAL_SERVER_ERROR, UPDATE_SUCCESS } from "../appConstants";
-import { ICertificate } from "../models/Certificate";
+import Certificate, { ICertificate } from "../models/Certificate";
 
-const express = require('express');
-const router = express.Router();
-const Certificate = require('../models/Certificate');
+export const certificateRouter: Router = express.Router();
+
 const auth = require('../middleware/auth');
 
 // @route       GET api/certificate
 // @desc        Get Certificates
 // @access      public
 
-router.get('/', async (req: Request, res: any) => {
+certificateRouter.get('/', async (req: Request, res: Response) => {
     try {
-        const certificates: any = await Certificate.find({});
+        const certificates: Array<ICertificate> = await Certificate.find({});
         res.json(certificates);
     } catch (err) {
         console.error(err.message);
@@ -24,7 +24,7 @@ router.get('/', async (req: Request, res: any) => {
 // @desc        Create Certificate
 // @access      private
 
-router.post('/', auth, async (req: any, res: any) => {
+certificateRouter.post('/', auth, async (req: Request, res: Response) => {
     try {
         const {
             name,
@@ -33,7 +33,7 @@ router.post('/', auth, async (req: any, res: any) => {
             source,
             issueDate,
             validTill
-        } = <any>req.body;
+        } = req.body;
 
         const certificate: ICertificate = new Certificate({
             name,
@@ -55,7 +55,7 @@ router.post('/', auth, async (req: any, res: any) => {
 // @desc        UPDATE Certificate
 // @access      private
 
-router.put('/', auth, async (req: Request, res: any) => {
+certificateRouter.put('/', auth, async (req: Request, res: Response) => {
     try {
         const {
             name,
@@ -65,7 +65,7 @@ router.put('/', auth, async (req: Request, res: any) => {
             issueDate,
             validTill,
             _id
-        } = <any>req.body;
+        } = req.body;
 
         const newData = {
             name,
@@ -87,7 +87,7 @@ router.put('/', auth, async (req: Request, res: any) => {
 // @desc        Delete Certificate
 // @access      private
 
-router.delete('/', auth, async (req: any, res: any) => {
+certificateRouter.delete('/', auth, async (req: Request, res: Response) => {
     try {
         const { _id } = req.body;
         await Certificate.deleteOne({ _id });
@@ -97,5 +97,3 @@ router.delete('/', auth, async (req: any, res: any) => {
         res.status(500).json({ msg: INTERNAL_SERVER_ERROR });
     }
 });
-
-module.exports = router;
