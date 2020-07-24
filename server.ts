@@ -28,12 +28,12 @@ app.get('/', (req, res) => {
 // Define Routes
 app.use('/api/user', userRouter);
 app.use('/api/auth', authRouter);
-// app.use('/api/info', infoRouter);
-// app.use('/api/skill', skillRouter);
+app.use('/api/info', infoRouter);
+app.use('/api/skill', skillRouter);
 app.use('/api/certificate', certificateRouter);
-// app.use('/api/job', jobRouter);
-// app.use('/api/hits', hitsRouter);
-// app.use('/api/project', projectRouter);
+app.use('/api/job', jobRouter);
+app.use('/api/hits', hitsRouter);
+app.use('/api/project', projectRouter);
 
 app.listen(PORT, () => {
     return console.log(`server is listening on ${PORT}`);
