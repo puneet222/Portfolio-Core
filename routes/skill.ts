@@ -2,6 +2,7 @@ import express, { Router, Request, Response } from "express";
 import { INTERNAL_SERVER_ERROR, UPDATE_SUCCESS } from "../appConstants";
 import Skill, { ISkill } from "../models/Skill";
 import AuthMiddleware from "../middleware/auth";
+import { SkillType } from "./routes.interface";
 
 export const skillRouter: Router = express.Router();
 
@@ -57,7 +58,7 @@ skillRouter.put('/', AuthMiddleware, async (req: Request, res: Response) => {
             _id
         } = req.body;
 
-        const newData: any = {
+        const newData: SkillType = {
             name,
             proficiency,
             imageLink

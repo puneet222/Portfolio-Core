@@ -2,6 +2,7 @@ import express, { Router, Request, Response } from 'express';
 import { INTERNAL_SERVER_ERROR, UPDATE_SUCCESS } from "../appConstants";
 import Info, { IInfo } from "../models/Info";
 import AuthMiddleware from "../middleware/auth";
+import { InfoType } from './routes.interface';
 
 export const infoRouter: Router = express.Router();
 
@@ -72,7 +73,7 @@ infoRouter.put('/', AuthMiddleware, async (req: Request, res: Response) => {
             _id
         } = req.body;
 
-        const newData = {
+        const newData: InfoType = {
             email,
             name,
             phone,

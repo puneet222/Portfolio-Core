@@ -49,7 +49,7 @@ userRouter.post('/', [
         const { name, email, password } = req.body;
 
         try {
-            let user: any = await User.findOne({ email });
+            let user: IUser | null = await User.findOne({ email });
             if (user) {
                 return res.status(400).json({ msg: USER_EXISTS });
             }
@@ -74,7 +74,7 @@ userRouter.post('/', [
 
             jwt.sign(payload, config.get('jwtSecret'), {
                 expiresIn: 3600000
-            }, (err: any, token: any) => {
+            }, (err, token) => {
                 if (err) throw err;
                 res.json({ token })
             }

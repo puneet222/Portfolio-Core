@@ -2,6 +2,7 @@ import express, { Router, Request, Response } from "express";
 import { INTERNAL_SERVER_ERROR, UPDATE_SUCCESS } from "../appConstants";
 import Project, { IProject } from "../models/Project";
 import AuthMiddleware from "../middleware/auth";
+import { ProjectType } from "./routes.interface";
 
 export const projectRouter: Router = express.Router();
 
@@ -72,7 +73,7 @@ projectRouter.put('/', AuthMiddleware, async (req: Request, res: Response) => {
             _id
         } = req.body;
 
-        const newData: any = {
+        const newData: ProjectType = {
             name,
             info,
             tech,

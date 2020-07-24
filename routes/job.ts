@@ -2,6 +2,7 @@ import express, { Router, Request, Response } from 'express';
 import { INTERNAL_SERVER_ERROR, UPDATE_SUCCESS } from "../appConstants";
 import Job, { IJob } from "../models/Job";
 import AuthMiddleware from "../middleware/auth";
+import { JobType } from './routes.interface';
 
 export const jobRouter: Router = express.Router();
 
@@ -69,14 +70,14 @@ jobRouter.put('/', AuthMiddleware, async (req: Request, res: Response) => {
             _id
         } = req.body;
 
-        const newData: any = {
+        const newData: JobType = {
             company,
             role,
             startDate,
             endDate,
             workInfo,
             techStack,
-            imageLink,
+            imageLink
         }
         await Job.findOneAndUpdate({ _id }, newData, { upsert: true });
         res.json({ msg: UPDATE_SUCCESS });

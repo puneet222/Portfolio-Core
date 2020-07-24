@@ -2,6 +2,7 @@ import express, { Router, Request, Response } from 'express';
 import { INTERNAL_SERVER_ERROR, UPDATE_SUCCESS } from "../appConstants";
 import Certificate, { ICertificate } from "../models/Certificate";
 import AuthMiddleware from "../middleware/auth";
+import { CertificateType } from './routes.interface';
 
 export const certificateRouter: Router = express.Router();
 
@@ -67,7 +68,7 @@ certificateRouter.put('/', AuthMiddleware, async (req: Request, res: Response) =
             _id
         } = req.body;
 
-        const newData = {
+        const newData: CertificateType = {
             name,
             link,
             imageLink,
