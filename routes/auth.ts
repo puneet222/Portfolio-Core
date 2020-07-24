@@ -1,16 +1,19 @@
-import { Response, Request } from "express";
+import express, { Response, Request, Router } from 'express';
+import { check, validationResult } from 'express-validator';
+import config from 'config';
+import * as bcrypt from 'bcryptjs';
+import * as jwt from 'jsonwebtoken';
 import { INVALID_EMAIL_MESSAGE, EMAIL, PASSWORD, NO_PASSWORD_MESSAGE, INVALID_CREDENTIALS, INTERNAL_SERVER_ERROR } from "../appConstants";
-import { IUser } from "../models/User";
-import { Error } from "mongoose";
+import User, { IUser } from "../models/User";
+// import { AuthMiddleware } from "../middleware/auth";
 
-const express = require('express');
-const router = express.Router();
-const { check, validationResult } = require('express-validator');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const config = require('config');
-const User = require('../models/User');
+const router: Router = express.Router();
+
 const auth = require('../middleware/auth');
+
+export interface JWTPayload {
+    user: Object;
+}
 
 // @route       GET api/auth
 // @desc        Get logged in User
@@ -18,7 +21,7 @@ const auth = require('../middleware/auth');
 
 router.get('/', auth, async (req: any, res: any) => {
     try {
-        const user: IUser = await User.findById(req.user.id).select('-password');
+        const user: IUser | null = await User.findById(req.user.id).select('-password');
         res.json(user);
     } catch (err) {
         console.error(err.message);
@@ -41,7 +44,7 @@ router.post('/', [
     const { email, password } = <any>req.body;
 
     try {
-        let user: IUser = await User.findOne({ email });
+        let user: IUser | null = await User.findOne({ email });
 
         if (!user) {
             return res.status(400).json({ msg: INVALID_CREDENTIALS })
@@ -53,7 +56,7 @@ router.post('/', [
             return res.status(400).json({ msg: INVALID_CREDENTIALS });
         }
 
-        const payload = {
+        const payload: JWTPayload = {
             user: {
                 id: <String>user.id
             }
@@ -61,7 +64,7 @@ router.post('/', [
 
         jwt.sign(payload, config.get('jwtSecret'), {
             expiresIn: 36000
-        }, (err: Error, token: String) => {
+        }, (err: any, token: any) => {
             if (err) throw err;
             res.json({ token })
         });

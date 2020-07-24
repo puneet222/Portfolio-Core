@@ -1,9 +1,13 @@
 import { UNAUTHORIZED, NO_TOKEN_MESSAGE } from "../appConstants";
-
-const jwt = require('jsonwebtoken');
+import express from 'express';
+import * as jwt from 'jsonwebtoken';
 const config = require('config');
 
-const AuthMiddleware = (req: any, res: any, next: any) => {
+export interface MiddlewareRequest extends express.Request {
+    user: string;
+}
+
+const AuthMiddleware = (req: MiddlewareRequest, res: express.Response, next: any) => {
     // Get token from header
     const token = req.header('x-auth-token');
 
@@ -13,7 +17,7 @@ const AuthMiddleware = (req: any, res: any, next: any) => {
     }
 
     try {
-        let decoded = jwt.verify(token, config.get('jwtSecret'));
+        let decoded: any = jwt.verify(token, config.get('jwtSecret'));
         req.user = decoded.user;
         next();
     } catch (err) {
