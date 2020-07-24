@@ -21,7 +21,7 @@ router.get('/', async (req: Request, res: any) => {
 });
 
 // @route       POST api/hits
-// @desc        Create Hits
+// @desc        Create/Update(Increment) Hits
 // @access      private
 
 router.post('/', auth, async (req: any, res: any) => {

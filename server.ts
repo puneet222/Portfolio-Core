@@ -24,6 +24,7 @@ app.use('/api/skill', require('./routes/skill'));
 app.use('/api/certificate', require('./routes/cetifiicate'));
 app.use('/api/job', require('./routes/job'));
 app.use('/api/hits', require('./routes/hits'));
+app.use('/api/project', require('./routes/project'));
 
 app.listen(PORT, () => {
     return console.log(`server is listening on ${PORT}`);
