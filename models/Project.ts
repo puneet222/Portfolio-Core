@@ -47,4 +47,4 @@ const projectSchema: Schema = new Schema({
 });
 
 //Export the model
-module.exports = mongoose.model<IProject>('Project', projectSchema);
+export default mongoose.model<IProject>('Project', projectSchema);

@@ -1,18 +1,19 @@
+import express, { Router, Request, Response } from "express";
 import { INTERNAL_SERVER_ERROR, UPDATE_SUCCESS } from "../appConstants";
-import { IProject } from "../models/Project";
+import Project, { IProject } from "../models/Project";
 
-const express = require('express');
-const router = express.Router();
-const Project = require('../models/Project');
+
+export const projectRouter: Router = express.Router();
+
 const auth = require('../middleware/auth');
 
 // @route       GET api/project
 // @desc        Get Projects
 // @access      public
 
-router.get('/', async (req: Request, res: any) => {
+projectRouter.get('/', async (req: Request, res: Response) => {
     try {
-        const projects: any = await Project.find({});
+        const projects: Array<IProject> = await Project.find({});
         res.json(projects);
     } catch (err) {
         console.error(err.message);
@@ -24,7 +25,7 @@ router.get('/', async (req: Request, res: any) => {
 // @desc        Create Project
 // @access      private
 
-router.post('/', auth, async (req: any, res: any) => {
+projectRouter.post('/', auth, async (req: Request, res: Response) => {
     try {
         const {
             name,
@@ -35,7 +36,7 @@ router.post('/', auth, async (req: any, res: any) => {
             githubLink,
             fromDate,
             toDate
-        } = <any>req.body;
+        } = req.body;
 
         const project: IProject = new Project({
             name,
@@ -59,7 +60,7 @@ router.post('/', auth, async (req: any, res: any) => {
 // @desc        UPDATE Project
 // @access      private
 
-router.put('/', auth, async (req: Request, res: any) => {
+projectRouter.put('/', auth, async (req: Request, res: Response) => {
     try {
         const {
             name,
@@ -71,9 +72,9 @@ router.put('/', auth, async (req: Request, res: any) => {
             fromDate,
             toDate,
             _id
-        } = <any>req.body;
+        } = req.body;
 
-        const newData = {
+        const newData: any = {
             name,
             info,
             tech,
@@ -95,7 +96,7 @@ router.put('/', auth, async (req: Request, res: any) => {
 // @desc        Delete Project
 // @access      private
 
-router.delete('/', auth, async (req: any, res: any) => {
+projectRouter.delete('/', auth, async (req: Request, res: Response) => {
     try {
         const { _id } = req.body;
         await Project.deleteOne({ _id });
@@ -105,5 +106,3 @@ router.delete('/', auth, async (req: any, res: any) => {
         res.status(500).json({ msg: INTERNAL_SERVER_ERROR });
     }
 });
-
-module.exports = router;

@@ -6,6 +6,7 @@ import { certificateRouter } from './routes/cetifiicate';
 import { hitsRouter } from './routes/hits';
 import { infoRouter } from './routes/info';
 import { jobRouter } from './routes/job';
+import { projectRouter } from './routes/project';
 
 const app = express();
 
@@ -29,7 +30,7 @@ app.use('/api/info', infoRouter);
 app.use('/api/certificate', certificateRouter);
 app.use('/api/job', jobRouter);
 app.use('/api/hits', hitsRouter);
-// app.use('/api/project', require('./routes/project'));
+app.use('/api/project', projectRouter);
 
 app.listen(PORT, () => {
     return console.log(`server is listening on ${PORT}`);
