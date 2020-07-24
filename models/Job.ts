@@ -43,4 +43,4 @@ const jobSchema: Schema = new Schema({
 });
 
 //Export the model
-module.exports = mongoose.model<IJob>('Job', jobSchema);
+export default mongoose.model<IJob>('Job', jobSchema);

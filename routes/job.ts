@@ -1,18 +1,18 @@
+import express, { Router, Request, Response } from 'express';
 import { INTERNAL_SERVER_ERROR, UPDATE_SUCCESS } from "../appConstants";
-import { IJob } from "../models/Job";
+import Job, { IJob } from "../models/Job";
 
-const express = require('express');
-const router = express.Router();
-const Job = require('../models/Job');
+export const jobRouter: Router = express.Router();
+
 const auth = require('../middleware/auth');
 
 // @route       GET api/job
 // @desc        Get Jobs
 // @access      public
 
-router.get('/', async (req: Request, res: any) => {
+jobRouter.get('/', async (req: Request, res: Response) => {
     try {
-        const jobs: any = await Job.find({});
+        const jobs: Array<IJob> = await Job.find({});
         res.json(jobs);
     } catch (err) {
         console.error(err.message);
@@ -24,7 +24,7 @@ router.get('/', async (req: Request, res: any) => {
 // @desc        Create Job
 // @access      private
 
-router.post('/', auth, async (req: any, res: any) => {
+jobRouter.post('/', auth, async (req: Request, res: Response) => {
     try {
         const {
             company,
@@ -34,7 +34,7 @@ router.post('/', auth, async (req: any, res: any) => {
             workInfo,
             techStack,
             imageLink
-        } = <any>req.body;
+        } = req.body;
 
         const job: IJob = new Job({
             company,
@@ -57,7 +57,7 @@ router.post('/', auth, async (req: any, res: any) => {
 // @desc        UPDATE Job
 // @access      private
 
-router.put('/', auth, async (req: Request, res: any) => {
+jobRouter.put('/', auth, async (req: Request, res: Response) => {
     try {
         const {
             company,
@@ -68,9 +68,9 @@ router.put('/', auth, async (req: Request, res: any) => {
             techStack,
             imageLink,
             _id
-        } = <any>req.body;
+        } = req.body;
 
-        const newData = {
+        const newData: any = {
             company,
             role,
             startDate,
@@ -91,7 +91,7 @@ router.put('/', auth, async (req: Request, res: any) => {
 // @desc        Delete Job
 // @access      private
 
-router.delete('/', auth, async (req: any, res: any) => {
+jobRouter.delete('/', auth, async (req: Request, res: Response) => {
     try {
         const { _id } = req.body;
         await Job.deleteOne({ _id });
@@ -101,5 +101,3 @@ router.delete('/', auth, async (req: any, res: any) => {
         res.status(500).json({ msg: INTERNAL_SERVER_ERROR });
     }
 });
-
-module.exports = router;

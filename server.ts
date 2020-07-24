@@ -5,6 +5,7 @@ import { connectDB } from './config/db';
 import { certificateRouter } from './routes/cetifiicate';
 import { hitsRouter } from './routes/hits';
 import { infoRouter } from './routes/info';
+import { jobRouter } from './routes/job';
 
 const app = express();
 
@@ -26,7 +27,7 @@ app.use('/api/auth', require('./routes/auth'));
 app.use('/api/info', infoRouter);
 // app.use('/api/skill', require('./routes/skill'));
 app.use('/api/certificate', certificateRouter);
-// app.use('/api/job', require('./routes/job'));
+app.use('/api/job', jobRouter);
 app.use('/api/hits', hitsRouter);
 // app.use('/api/project', require('./routes/project'));
 
