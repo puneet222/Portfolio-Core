@@ -1,10 +1,10 @@
 import express, { Router, Request, Response } from 'express';
 import { INTERNAL_SERVER_ERROR, UPDATE_SUCCESS } from "../appConstants";
 import Certificate, { ICertificate } from "../models/Certificate";
+import AuthMiddleware from "../middleware/auth";
 
 export const certificateRouter: Router = express.Router();
 
-const auth = require('../middleware/auth');
 
 // @route       GET api/certificate
 // @desc        Get Certificates
@@ -24,7 +24,7 @@ certificateRouter.get('/', async (req: Request, res: Response) => {
 // @desc        Create Certificate
 // @access      private
 
-certificateRouter.post('/', auth, async (req: Request, res: Response) => {
+certificateRouter.post('/', AuthMiddleware, async (req: Request, res: Response) => {
     try {
         const {
             name,
@@ -55,7 +55,7 @@ certificateRouter.post('/', auth, async (req: Request, res: Response) => {
 // @desc        UPDATE Certificate
 // @access      private
 
-certificateRouter.put('/', auth, async (req: Request, res: Response) => {
+certificateRouter.put('/', AuthMiddleware, async (req: Request, res: Response) => {
     try {
         const {
             name,
@@ -87,7 +87,7 @@ certificateRouter.put('/', auth, async (req: Request, res: Response) => {
 // @desc        Delete Certificate
 // @access      private
 
-certificateRouter.delete('/', auth, async (req: Request, res: Response) => {
+certificateRouter.delete('/', AuthMiddleware, async (req: Request, res: Response) => {
     try {
         const { _id } = req.body;
         await Certificate.deleteOne({ _id });

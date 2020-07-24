@@ -1,13 +1,13 @@
 import { UNAUTHORIZED, NO_TOKEN_MESSAGE } from "../appConstants";
-import express from 'express';
+import express, { Request, Response } from 'express';
 import * as jwt from 'jsonwebtoken';
 const config = require('config');
 
-export interface MiddlewareRequest extends express.Request {
-    user: string;
+export interface MiddlewareRequest extends Request {
+    user?: Object;
 }
 
-const AuthMiddleware = (req: MiddlewareRequest, res: express.Response, next: any) => {
+const AuthMiddleware = (req: MiddlewareRequest, res: Response, next: express.NextFunction) => {
     // Get token from header
     const token = req.header('x-auth-token');
 
@@ -26,4 +26,4 @@ const AuthMiddleware = (req: MiddlewareRequest, res: express.Response, next: any
     }
 }
 
-module.exports = AuthMiddleware;
+export default AuthMiddleware;

@@ -1,10 +1,9 @@
 import express, { Router, Request, Response } from 'express';
 import { INTERNAL_SERVER_ERROR, UPDATE_SUCCESS } from "../appConstants";
 import Info, { IInfo } from "../models/Info";
+import AuthMiddleware from "../middleware/auth";
 
 export const infoRouter: Router = express.Router();
-
-const auth = require('../middleware/auth');
 
 // @route       GET api/info
 // @desc        Get Infos
@@ -24,7 +23,7 @@ infoRouter.get('/', async (req: Request, res: Response) => {
 // @desc        Create Info
 // @access      private
 
-infoRouter.post('/', auth, async (req: Request, res: Response) => {
+infoRouter.post('/', AuthMiddleware, async (req: Request, res: Response) => {
     try {
         const {
             email,
@@ -59,7 +58,7 @@ infoRouter.post('/', auth, async (req: Request, res: Response) => {
 // @desc        UPDATE Info
 // @access      private
 
-infoRouter.put('/', auth, async (req: Request, res: Response) => {
+infoRouter.put('/', AuthMiddleware, async (req: Request, res: Response) => {
     try {
         const {
             email,
@@ -95,7 +94,7 @@ infoRouter.put('/', auth, async (req: Request, res: Response) => {
 // @desc        Delete Info
 // @access      private
 
-infoRouter.delete('/', auth, async (req: Request, res: Response) => {
+infoRouter.delete('/', AuthMiddleware, async (req: Request, res: Response) => {
     try {
         const { _id } = req.body;
         await Info.deleteOne({ _id });
