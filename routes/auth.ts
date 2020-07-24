@@ -5,7 +5,7 @@ import * as bcrypt from 'bcryptjs';
 import * as jwt from 'jsonwebtoken';
 import { INVALID_EMAIL_MESSAGE, EMAIL, PASSWORD, NO_PASSWORD_MESSAGE, INVALID_CREDENTIALS, INTERNAL_SERVER_ERROR } from "../appConstants";
 import User, { IUser } from "../models/User";
-import AuthMiddleware from "../middleware/auth";
+import AuthMiddleware, { MiddlewareRequest } from "../middleware/auth";
 
 export const authRouter: Router = express.Router();
 
@@ -17,9 +17,10 @@ export interface JWTPayload {
 // @desc        Get logged in User
 // @access      Private
 
-authRouter.get('/', AuthMiddleware, async (req: any, res: Response) => {
+authRouter.get('/', AuthMiddleware, async (req: MiddlewareRequest, res: Response) => {
     try {
-        const user: IUser | null = await User.findById(req.user.id).select('-password');
+        const id: string = req.user ? req.user.id : "";
+        const user: IUser | null = await User.findById(id).select('-password');
         res.json(user);
     } catch (err) {
         console.error(err.message);
