@@ -2,7 +2,7 @@ import mongoose, { Schema, Document } from 'mongoose';
 
 export interface IHits extends Document {
     hits: number;
-    lastUpdated: Date;
+    lastUpdated?: Date;
 }
 
 // Declare the Schema of the Mongo model
@@ -18,4 +18,4 @@ const hitsSchema: Schema = new Schema({
 });
 
 //Export the model
-module.exports = mongoose.model<IHits>('Hits', hitsSchema);
+export default mongoose.model<IHits>('Hits', hitsSchema);

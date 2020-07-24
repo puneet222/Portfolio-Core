@@ -1,18 +1,18 @@
+import express, { Router, Request, Response } from 'express';
 import { INTERNAL_SERVER_ERROR, UPDATE_SUCCESS } from "../appConstants";
-import { IHits } from "../models/Hits";
+import Hits, { IHits } from "../models/Hits";
 
-const express = require('express');
-const router = express.Router();
-const Hits = require('../models/Hits');
+export const hitsRouter: Router = express.Router();
+
 const auth = require('../middleware/auth');
 
 // @route       GET api/hits
 // @desc        Get Hits
 // @access      public
 
-router.get('/', async (req: Request, res: any) => {
+hitsRouter.get('/', async (req: Request, res: Response) => {
     try {
-        const hits: any = await Hits.find({});
+        const hits: Array<IHits> = await Hits.find({});
         res.json(hits);
     } catch (err) {
         console.error(err.message);
@@ -22,16 +22,16 @@ router.get('/', async (req: Request, res: any) => {
 
 // @route       POST api/hits
 // @desc        Create/Update(Increment) Hits
-// @access      private
+// @access      public
 
-router.post('/', auth, async (req: any, res: any) => {
+hitsRouter.post('/', async (req: Request, res: Response) => {
     try {
-        const hitsData: any = await Hits.find({});
+        const hitsData: Array<IHits> = await Hits.find({});
         let hits: IHits = new Hits({ hits: 1 });;
         if (hitsData.length > 0) {
-            let updatedHits = hitsData[0]["hits"] + 1;
-            let _id = hitsData[0]["_id"];
-            let newData = {
+            let updatedHits: IHits['hits'] = hitsData[0]["hits"] + 1;
+            let _id: string = hitsData[0]["_id"];
+            let newData: Object = {
                 hits: updatedHits
             }
             await Hits.findOneAndUpdate({ _id }, newData, { upsert: true });
@@ -51,7 +51,7 @@ router.post('/', auth, async (req: any, res: any) => {
 // @desc        Delete Hits
 // @access      private
 
-router.delete('/', auth, async (req: any, res: any) => {
+hitsRouter.delete('/', auth, async (req: Request, res: Response) => {
     try {
         const { _id } = req.body;
         await Hits.deleteOne({ _id });
@@ -61,5 +61,3 @@ router.delete('/', auth, async (req: any, res: any) => {
         res.status(500).json({ msg: INTERNAL_SERVER_ERROR });
     }
 });
-
-module.exports = router;
