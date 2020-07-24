@@ -53,4 +53,4 @@ const InfoSchema: Schema = new Schema({
 });
 
 //Export the model
-module.exports = mongoose.model<IInfo>('Info', InfoSchema);
+export default mongoose.model<IInfo>('Info', InfoSchema);

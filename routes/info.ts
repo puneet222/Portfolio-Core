@@ -1,18 +1,18 @@
+import express, { Router, Request, Response } from 'express';
 import { INTERNAL_SERVER_ERROR, UPDATE_SUCCESS } from "../appConstants";
-import { IInfo } from "../models/Info";
+import Info, { IInfo } from "../models/Info";
 
-const express = require('express');
-const router = express.Router();
-const Info = require('../models/Info');
+export const infoRouter: Router = express.Router();
+
 const auth = require('../middleware/auth');
 
 // @route       GET api/info
 // @desc        Get Infos
 // @access      public
 
-router.get('/', async (req: Request, res: any) => {
+infoRouter.get('/', async (req: Request, res: Response) => {
     try {
-        const infos: any = await Info.find({}).sort({ date: -1 });
+        const infos: Array<IInfo> = await Info.find({}).sort({ date: -1 });
         res.json(infos);
     } catch (err) {
         console.error(err.message);
@@ -24,7 +24,7 @@ router.get('/', async (req: Request, res: any) => {
 // @desc        Create Info
 // @access      private
 
-router.post('/', auth, async (req: any, res: any) => {
+infoRouter.post('/', auth, async (req: Request, res: Response) => {
     try {
         const {
             email,
@@ -35,7 +35,7 @@ router.post('/', auth, async (req: any, res: any) => {
             github,
             linkedIn,
             resume
-        } = <any>req.body;
+        } = req.body;
 
         const info: IInfo = new Info({
             email,
@@ -59,7 +59,7 @@ router.post('/', auth, async (req: any, res: any) => {
 // @desc        UPDATE Info
 // @access      private
 
-router.put('/', auth, async (req: Request, res: any) => {
+infoRouter.put('/', auth, async (req: Request, res: Response) => {
     try {
         const {
             email,
@@ -71,7 +71,7 @@ router.put('/', auth, async (req: Request, res: any) => {
             linkedIn,
             resume,
             _id
-        } = <any>req.body;
+        } = req.body;
 
         const newData = {
             email,
@@ -95,7 +95,7 @@ router.put('/', auth, async (req: Request, res: any) => {
 // @desc        Delete Info
 // @access      private
 
-router.delete('/', auth, async (req: any, res: any) => {
+infoRouter.delete('/', auth, async (req: Request, res: Response) => {
     try {
         const { _id } = req.body;
         await Info.deleteOne({ _id });
@@ -105,5 +105,3 @@ router.delete('/', auth, async (req: any, res: any) => {
         res.status(500).json({ msg: INTERNAL_SERVER_ERROR });
     }
 });
-
-module.exports = router;

@@ -4,6 +4,7 @@ import { connectDB } from './config/db';
 
 import { certificateRouter } from './routes/cetifiicate';
 import { hitsRouter } from './routes/hits';
+import { infoRouter } from './routes/info';
 
 const app = express();
 
@@ -22,7 +23,7 @@ app.get('/', (req, res) => {
 // Define Routes
 // app.use('/api/user', require('./routes/user'));
 app.use('/api/auth', require('./routes/auth'));
-// app.use('/api/info', require('./routes/info'));
+app.use('/api/info', infoRouter);
 // app.use('/api/skill', require('./routes/skill'));
 app.use('/api/certificate', certificateRouter);
 // app.use('/api/job', require('./routes/job'));
