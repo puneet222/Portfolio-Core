@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Express } from 'express';
 import bodyParser from 'body-parser';
 import { connectDB } from './config/db';
 
@@ -7,8 +7,9 @@ import { hitsRouter } from './routes/hits';
 import { infoRouter } from './routes/info';
 import { jobRouter } from './routes/job';
 import { projectRouter } from './routes/project';
+import { skillRouter } from './routes/skill';
 
-const app = express();
+const app: Express = express();
 
 // connect DB
 connectDB();
@@ -26,7 +27,7 @@ app.get('/', (req, res) => {
 // app.use('/api/user', require('./routes/user'));
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/info', infoRouter);
-// app.use('/api/skill', require('./routes/skill'));
+app.use('/api/skill', skillRouter);
 app.use('/api/certificate', certificateRouter);
 app.use('/api/job', jobRouter);
 app.use('/api/hits', hitsRouter);

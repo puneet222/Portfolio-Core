@@ -1,18 +1,18 @@
+import express, { Router, Request, Response } from "express";
 import { INTERNAL_SERVER_ERROR, UPDATE_SUCCESS } from "../appConstants";
-import { ISkill } from "../models/Skill";
+import Skill, { ISkill } from "../models/Skill";
 
-const express = require('express');
-const router = express.Router();
-const Skill = require('../models/Skill');
+export const skillRouter: Router = express.Router();
+
 const auth = require('../middleware/auth');
 
 // @route       GET api/skill
 // @desc        Get Skills
 // @access      public
 
-router.get('/', async (req: Request, res: any) => {
+skillRouter.get('/', async (req: Request, res: Response) => {
     try {
-        const skills: any = await Skill.find({});
+        const skills: Array<ISkill> = await Skill.find({});
         res.json(skills);
     } catch (err) {
         console.error(err.message);
@@ -24,13 +24,13 @@ router.get('/', async (req: Request, res: any) => {
 // @desc        Create Skill
 // @access      private
 
-router.post('/', auth, async (req: any, res: any) => {
+skillRouter.post('/', auth, async (req: Request, res: Response) => {
     try {
         const {
             name,
             proficiency,
             imageLink
-        } = <any>req.body;
+        } = req.body;
 
         const skill: ISkill = new Skill({
             name,
@@ -49,16 +49,16 @@ router.post('/', auth, async (req: any, res: any) => {
 // @desc        UPDATE Skill
 // @access      private
 
-router.put('/', auth, async (req: Request, res: any) => {
+skillRouter.put('/', auth, async (req: Request, res: Response) => {
     try {
         const {
             name,
             proficiency,
             imageLink,
             _id
-        } = <any>req.body;
+        } = req.body;
 
-        const newData = {
+        const newData: any = {
             name,
             proficiency,
             imageLink
@@ -75,7 +75,7 @@ router.put('/', auth, async (req: Request, res: any) => {
 // @desc        Delete Skill
 // @access      private
 
-router.delete('/', auth, async (req: any, res: any) => {
+skillRouter.delete('/', auth, async (req: Request, res: Response) => {
     try {
         const { _id } = req.body;
         await Skill.deleteOne({ _id });
@@ -85,5 +85,3 @@ router.delete('/', auth, async (req: any, res: any) => {
         res.status(500).json({ msg: INTERNAL_SERVER_ERROR });
     }
 });
-
-module.exports = router;
