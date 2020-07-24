@@ -24,4 +24,4 @@ const skillSchema: Schema = new Schema({
 });
 
 //Export the model
-module.exports = mongoose.model<ISkill>('Skill', skillSchema);
+export default mongoose.model<ISkill>('Skill', skillSchema);
