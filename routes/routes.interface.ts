@@ -18,6 +18,7 @@ export interface CertificateType {
     source: string;
     issueDate: Date;
     validTill?: Date;
+    _id?: string;
 }
 
 export interface HitsType {

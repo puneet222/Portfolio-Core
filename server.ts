@@ -2,7 +2,7 @@ import express, { Express } from 'express';
 import bodyParser from 'body-parser';
 import { connectDB } from './config/db';
 
-import { certificateRouter } from './routes/cetificate';
+import { certificateRouter } from './routes/certificate';
 import { hitsRouter } from './routes/hits';
 import { infoRouter } from './routes/info';
 import { jobRouter } from './routes/job';
