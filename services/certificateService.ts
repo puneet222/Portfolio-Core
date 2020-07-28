@@ -1,5 +1,4 @@
 import Certificate, { ICertificate } from "../models/Certificate";
-import { INTERNAL_SERVER_ERROR } from "../appConstants";
 import { CertificateType } from "../routes/routes.interface";
 
 class CertificateService {

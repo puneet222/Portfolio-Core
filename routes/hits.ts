@@ -3,6 +3,7 @@ import { INTERNAL_SERVER_ERROR, UPDATE_SUCCESS } from "../appConstants";
 import Hits, { IHits } from "../models/Hits";
 import AuthMiddleware from "../middleware/auth";
 import { HitsType } from './routes.interface';
+import HitsService from '../services/hitsService';
 
 export const hitsRouter: Router = express.Router();
 
@@ -12,7 +13,7 @@ export const hitsRouter: Router = express.Router();
 
 hitsRouter.get('/', async (req: Request, res: Response) => {
     try {
-        const hits: Array<IHits> = await Hits.find({});
+        const hits: Array<IHits> = await HitsService.getHits();
         res.json(hits);
     } catch (err) {
         console.error(err.message);
@@ -26,20 +27,8 @@ hitsRouter.get('/', async (req: Request, res: Response) => {
 
 hitsRouter.post('/', async (req: Request, res: Response) => {
     try {
-        const hitsData: Array<IHits> = await Hits.find({});
-        let hits: IHits = new Hits({ hits: 1 });;
-        if (hitsData.length > 0) {
-            let updatedHits: IHits['hits'] = hitsData[0]["hits"] + 1;
-            let _id: string = hitsData[0]["_id"];
-            let newData: HitsType = {
-                hits: updatedHits
-            }
-            await Hits.findOneAndUpdate({ _id }, newData, { upsert: true });
-            res.json({ msg: UPDATE_SUCCESS });
-        } else {
-            await hits.save();
-            res.json(hits);
-        }
+        await HitsService.updateHits();
+        res.json({ msg: UPDATE_SUCCESS });
     } catch (err) {
         console.error(err.message);
         res.status(500).json({ msg: INTERNAL_SERVER_ERROR });
@@ -54,7 +43,7 @@ hitsRouter.post('/', async (req: Request, res: Response) => {
 hitsRouter.delete('/', AuthMiddleware, async (req: Request, res: Response) => {
     try {
         const { _id } = req.body;
-        await Hits.deleteOne({ _id });
+        await HitsService.deleteHits(_id);
         res.json({ deleted: _id });
     } catch (err) {
         console.error(err.message);

@@ -1,6 +1,6 @@
-import express, { Router, Request, Response, response } from 'express';
+import express, { Router, Request, Response } from 'express';
 import { INTERNAL_SERVER_ERROR, UPDATE_SUCCESS } from "../appConstants";
-import Certificate, { ICertificate } from "../models/Certificate";
+import { ICertificate } from "../models/Certificate";
 import AuthMiddleware from "../middleware/auth";
 import { CertificateType } from './routes.interface';
 import CertificateService from '../services/certificateService';
