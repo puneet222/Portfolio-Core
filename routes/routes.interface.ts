@@ -56,7 +56,8 @@ export interface ProjectType {
     link?: string;
     githubLink: string;
     fromDate?: Date;
-    toDate?: Date
+    toDate?: Date;
+    _id?: string;
 }
 
 export interface SkillType {

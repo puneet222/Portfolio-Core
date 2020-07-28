@@ -3,6 +3,7 @@ import { INTERNAL_SERVER_ERROR, UPDATE_SUCCESS } from "../appConstants";
 import Project, { IProject } from "../models/Project";
 import AuthMiddleware from "../middleware/auth";
 import { ProjectType } from "./routes.interface";
+import ProjectService from "../services/projectService";
 
 export const projectRouter: Router = express.Router();
 
@@ -12,7 +13,7 @@ export const projectRouter: Router = express.Router();
 
 projectRouter.get('/', async (req: Request, res: Response) => {
     try {
-        const projects: Array<IProject> = await Project.find({});
+        const projects: Array<IProject> = await ProjectService.getProjects();
         res.json(projects);
     } catch (err) {
         console.error(err.message);
@@ -26,28 +27,8 @@ projectRouter.get('/', async (req: Request, res: Response) => {
 
 projectRouter.post('/', AuthMiddleware, async (req: Request, res: Response) => {
     try {
-        const {
-            name,
-            info,
-            tech,
-            images,
-            link,
-            githubLink,
-            fromDate,
-            toDate
-        } = req.body;
-
-        const project: IProject = new Project({
-            name,
-            info,
-            tech,
-            images,
-            link,
-            githubLink,
-            fromDate,
-            toDate
-        });
-        await project.save();
+        const projectData: ProjectType = req.body;
+        const project: IProject = await ProjectService.createProject(projectData);
         res.json(project);
     } catch (err) {
         console.error(err.message);
@@ -61,29 +42,8 @@ projectRouter.post('/', AuthMiddleware, async (req: Request, res: Response) => {
 
 projectRouter.put('/', AuthMiddleware, async (req: Request, res: Response) => {
     try {
-        const {
-            name,
-            info,
-            tech,
-            images,
-            link,
-            githubLink,
-            fromDate,
-            toDate,
-            _id
-        } = req.body;
-
-        const newData: ProjectType = {
-            name,
-            info,
-            tech,
-            images,
-            link,
-            githubLink,
-            fromDate,
-            toDate
-        }
-        await Project.findOneAndUpdate({ _id }, newData, { upsert: true });
+        const newData: ProjectType = req.body;
+        await ProjectService.updateProject(newData);
         res.json({ msg: UPDATE_SUCCESS });
     } catch (err) {
         console.error(err.message);
@@ -98,7 +58,7 @@ projectRouter.put('/', AuthMiddleware, async (req: Request, res: Response) => {
 projectRouter.delete('/', AuthMiddleware, async (req: Request, res: Response) => {
     try {
         const { _id } = req.body;
-        await Project.deleteOne({ _id });
+        await ProjectService.deleteProject(_id);
         res.json({ deleted: _id });
     } catch (err) {
         console.error(err.message);
