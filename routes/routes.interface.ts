@@ -45,6 +45,7 @@ export interface JobType {
     workInfo: string;
     techStack: Array<string>;
     imageLink?: string;
+    _id?: string;
 }
 
 export interface ProjectType {

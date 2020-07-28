@@ -3,6 +3,7 @@ import { INTERNAL_SERVER_ERROR, UPDATE_SUCCESS } from "../appConstants";
 import Job, { IJob } from "../models/Job";
 import AuthMiddleware from "../middleware/auth";
 import { JobType } from './routes.interface';
+import JobService from '../services/jobService';
 
 export const jobRouter: Router = express.Router();
 
@@ -12,7 +13,7 @@ export const jobRouter: Router = express.Router();
 
 jobRouter.get('/', async (req: Request, res: Response) => {
     try {
-        const jobs: Array<IJob> = await Job.find({});
+        const jobs: Array<IJob> = await JobService.getJobs();
         res.json(jobs);
     } catch (err) {
         console.error(err.message);
@@ -26,26 +27,8 @@ jobRouter.get('/', async (req: Request, res: Response) => {
 
 jobRouter.post('/', AuthMiddleware, async (req: Request, res: Response) => {
     try {
-        const {
-            company,
-            role,
-            startDate,
-            endDate,
-            workInfo,
-            techStack,
-            imageLink
-        } = req.body;
-
-        const job: IJob = new Job({
-            company,
-            role,
-            startDate,
-            endDate,
-            workInfo,
-            techStack,
-            imageLink
-        });
-        await job.save();
+        const jobData: JobType = req.body;
+        const job: IJob = await JobService.createJob(jobData);
         res.json(job);
     } catch (err) {
         console.error(err.message);
@@ -59,27 +42,8 @@ jobRouter.post('/', AuthMiddleware, async (req: Request, res: Response) => {
 
 jobRouter.put('/', AuthMiddleware, async (req: Request, res: Response) => {
     try {
-        const {
-            company,
-            role,
-            startDate,
-            endDate,
-            workInfo,
-            techStack,
-            imageLink,
-            _id
-        } = req.body;
-
-        const newData: JobType = {
-            company,
-            role,
-            startDate,
-            endDate,
-            workInfo,
-            techStack,
-            imageLink
-        }
-        await Job.findOneAndUpdate({ _id }, newData, { upsert: true });
+        const newData: JobType = req.body;
+        await JobService.updateJob(newData);
         res.json({ msg: UPDATE_SUCCESS });
     } catch (err) {
         console.error(err.message);
@@ -94,7 +58,7 @@ jobRouter.put('/', AuthMiddleware, async (req: Request, res: Response) => {
 jobRouter.delete('/', AuthMiddleware, async (req: Request, res: Response) => {
     try {
         const { _id } = req.body;
-        await Job.deleteOne({ _id });
+        await JobService.deleteJob(_id);
         res.json({ deleted: _id });
     } catch (err) {
         console.error(err.message);
