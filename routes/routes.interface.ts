@@ -34,6 +34,7 @@ export interface InfoType {
     github: string;
     linkedIn: string;
     resume: string;
+    _id?: string;
 }
 
 export interface JobType {

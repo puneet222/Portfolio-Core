@@ -1,8 +1,9 @@
 import express, { Router, Request, Response } from 'express';
 import { INTERNAL_SERVER_ERROR, UPDATE_SUCCESS } from "../appConstants";
-import Info, { IInfo } from "../models/Info";
+import { IInfo } from "../models/Info";
 import AuthMiddleware from "../middleware/auth";
 import { InfoType } from './routes.interface';
+import InfoService from '../services/infoService';
 
 export const infoRouter: Router = express.Router();
 
@@ -12,7 +13,7 @@ export const infoRouter: Router = express.Router();
 
 infoRouter.get('/', async (req: Request, res: Response) => {
     try {
-        const infos: Array<IInfo> = await Info.find({}).sort({ date: -1 });
+        const infos: Array<IInfo> = await InfoService.getInfos();
         res.json(infos);
     } catch (err) {
         console.error(err.message);
@@ -26,28 +27,8 @@ infoRouter.get('/', async (req: Request, res: Response) => {
 
 infoRouter.post('/', AuthMiddleware, async (req: Request, res: Response) => {
     try {
-        const {
-            email,
-            name,
-            phone,
-            introduction,
-            website,
-            github,
-            linkedIn,
-            resume
-        } = req.body;
-
-        const info: IInfo = new Info({
-            email,
-            name,
-            phone,
-            introduction,
-            website,
-            github,
-            linkedIn,
-            resume
-        });
-        await info.save();
+        const infoData: InfoType = req.body;
+        const info: IInfo = await InfoService.createInfo(infoData);
         res.json(info);
     } catch (err) {
         console.error(err.message);
@@ -61,29 +42,8 @@ infoRouter.post('/', AuthMiddleware, async (req: Request, res: Response) => {
 
 infoRouter.put('/', AuthMiddleware, async (req: Request, res: Response) => {
     try {
-        const {
-            email,
-            name,
-            phone,
-            introduction,
-            website,
-            github,
-            linkedIn,
-            resume,
-            _id
-        } = req.body;
-
-        const newData: InfoType = {
-            email,
-            name,
-            phone,
-            introduction,
-            website,
-            github,
-            linkedIn,
-            resume
-        }
-        await Info.findOneAndUpdate({ _id }, newData, { upsert: true });
+        const infoData: InfoType = req.body; // implicit object destructuring
+        await InfoService.updateInfo(infoData);
         res.json({ msg: UPDATE_SUCCESS });
     } catch (err) {
         console.error(err.message);
@@ -98,7 +58,7 @@ infoRouter.put('/', AuthMiddleware, async (req: Request, res: Response) => {
 infoRouter.delete('/', AuthMiddleware, async (req: Request, res: Response) => {
     try {
         const { _id } = req.body;
-        await Info.deleteOne({ _id });
+        await InfoService.deleteInfo(_id);
         res.json({ deleted: _id });
     } catch (err) {
         console.error(err.message);
