@@ -1,8 +1,7 @@
 import express, { Router, Request, Response } from 'express';
 import { INTERNAL_SERVER_ERROR, UPDATE_SUCCESS } from "../appConstants";
-import Hits, { IHits } from "../models/Hits";
+import { IHits } from "../models/Hits";
 import AuthMiddleware from "../middleware/auth";
-import { HitsType } from './routes.interface';
 import HitsService from '../services/hitsService';
 
 export const hitsRouter: Router = express.Router();
