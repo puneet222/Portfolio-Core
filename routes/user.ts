@@ -1,6 +1,5 @@
 import express, { Request, Response, Router } from 'express';
-import * as bcrypt from 'bcryptjs';
-import * as config from 'config';
+import config from 'config';
 import * as jwt from 'jsonwebtoken';
 import { check, validationResult, Result, ValidationError } from 'express-validator';
 import {
@@ -15,6 +14,8 @@ import {
 } from "../appConstants";
 import User, { IUser } from '../models/User';
 import AuthMiddleware from '../middleware/auth';
+import UserService from '../services/userService';
+import { UserType, JWTPayload } from './routes.interface';
 
 export const userRouter: Router = express.Router();
 
@@ -22,9 +23,9 @@ export const userRouter: Router = express.Router();
 // @desc        Get users
 // @access      Private
 
-userRouter.get('/', AuthMiddleware, async (req: Request, res: Response) => {
+userRouter.get('/', async (req: Request, res: Response) => {
     try {
-        const users: Array<IUser> = await User.find({});
+        const users: Array<IUser> = await UserService.getUsers();
         res.json(users);
     } catch (err) {
         console.error(err.message);
@@ -33,7 +34,7 @@ userRouter.get('/', AuthMiddleware, async (req: Request, res: Response) => {
 });
 
 // @route       POST api/user
-// @desc        Add users
+// @desc        Add user
 // @access      Private
 
 userRouter.post('/', [
@@ -46,39 +47,27 @@ userRouter.post('/', [
         if (!errors.isEmpty()) {
             return res.status(400).json({ errors: errors.array() })
         }
-        const { name, email, password } = req.body;
+        const userData: UserType = req.body;
 
         try {
-            let user: IUser | null = await User.findOne({ email });
+            let user: IUser | null = await UserService.getUser(userData);
             if (user) {
                 return res.status(400).json({ msg: USER_EXISTS });
             }
 
-            user = new User({
-                name,
-                email,
-                password
-            });
+            user = await UserService.createUser(userData);
 
-            const salt: string = await bcrypt.genSalt(10);
-
-            user.password = await bcrypt.hash(password, salt);
-
-            await user.save();
-
-            const payload: Object = {
+            const payload: JWTPayload = {
                 user: {
-                    id: <String>user.id
+                    id: user.id
                 }
             };
-
             jwt.sign(payload, config.get('jwtSecret'), {
                 expiresIn: 3600000
             }, (err, token) => {
                 if (err) throw err;
                 res.json({ token })
-            }
-            );
+            });
 
         } catch (error) {
             console.error(error.message);

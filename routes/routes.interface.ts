@@ -1,14 +1,24 @@
 import { Request } from 'express';
 
-export interface User {
-    id: string;
+export interface UserType {
+    id?: string;
+    name?: string;
+    email: string;
+    password: string;
 }
 export interface AuthRequest extends Request {
-    user?: User;
+    user?: UserType;
 }
 
 export interface JWTPayload {
-    user: User;
+    user: {
+        id: string
+    };
+}
+
+export interface AuthResponse {
+    isAuthenticated: boolean;
+    user?: UserType;
 }
 
 export interface CertificateType {

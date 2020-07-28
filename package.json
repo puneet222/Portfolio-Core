@@ -14,6 +14,7 @@
     "@types/bcryptjs": "^2.4.2",
     "@types/config": "0.0.36",
     "@types/jsonwebtoken": "^8.5.0",
+    "@types/lodash": "^4.14.158",
     "@types/mongoose": "^5.7.32",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
@@ -21,6 +22,7 @@
     "express": "^4.17.1",
     "express-validator": "^6.6.0",
     "jsonwebtoken": "^8.5.1",
+    "lodash": "^4.17.19",
     "mongoose": "^5.9.24",
     "ts-node": "^8.10.2"
   },
