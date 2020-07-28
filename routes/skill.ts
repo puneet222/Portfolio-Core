@@ -3,6 +3,7 @@ import { INTERNAL_SERVER_ERROR, UPDATE_SUCCESS } from "../appConstants";
 import Skill, { ISkill } from "../models/Skill";
 import AuthMiddleware from "../middleware/auth";
 import { SkillType } from "./routes.interface";
+import SkillService from "../services/skillService";
 
 export const skillRouter: Router = express.Router();
 
@@ -12,7 +13,7 @@ export const skillRouter: Router = express.Router();
 
 skillRouter.get('/', async (req: Request, res: Response) => {
     try {
-        const skills: Array<ISkill> = await Skill.find({});
+        const skills: Array<ISkill> = await SkillService.getSkills();
         res.json(skills);
     } catch (err) {
         console.error(err.message);
@@ -26,18 +27,8 @@ skillRouter.get('/', async (req: Request, res: Response) => {
 
 skillRouter.post('/', AuthMiddleware, async (req: Request, res: Response) => {
     try {
-        const {
-            name,
-            proficiency,
-            imageLink
-        } = req.body;
-
-        const skill: ISkill = new Skill({
-            name,
-            proficiency,
-            imageLink
-        });
-        await skill.save();
+        const skillData: SkillType = req.body;
+        const skill: ISkill = await SkillService.createSkill(skillData);
         res.json(skill);
     } catch (err) {
         console.error(err.message);
@@ -51,19 +42,8 @@ skillRouter.post('/', AuthMiddleware, async (req: Request, res: Response) => {
 
 skillRouter.put('/', AuthMiddleware, async (req: Request, res: Response) => {
     try {
-        const {
-            name,
-            proficiency,
-            imageLink,
-            _id
-        } = req.body;
-
-        const newData: SkillType = {
-            name,
-            proficiency,
-            imageLink
-        }
-        await Skill.findOneAndUpdate({ _id }, newData, { upsert: true });
+        const newData: SkillType = req.body;
+        await SkillService.updateSkill(newData);
         res.json({ msg: UPDATE_SUCCESS });
     } catch (err) {
         console.error(err.message);
@@ -78,7 +58,7 @@ skillRouter.put('/', AuthMiddleware, async (req: Request, res: Response) => {
 skillRouter.delete('/', AuthMiddleware, async (req: Request, res: Response) => {
     try {
         const { _id } = req.body;
-        await Skill.deleteOne({ _id });
+        await SkillService.deleteSkill(_id);
         res.json({ deleted: _id });
     } catch (err) {
         console.error(err.message);

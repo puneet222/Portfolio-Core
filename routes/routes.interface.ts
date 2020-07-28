@@ -64,4 +64,5 @@ export interface SkillType {
     name: string;
     proficiency: number;
     imageLink: string;
+    _id: string;
 }
