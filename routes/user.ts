@@ -14,7 +14,8 @@ import {
 } from "../appConstants";
 import { IUser } from '../models/User';
 import UserService from '../services/userService';
-import { UserType, JWTPayload } from './routes.interface';
+import { UserType, JWTPayload, AuthRequest } from './routes.interface';
+import AuthMiddleware from '../middleware/auth';
 
 export const userRouter: Router = express.Router();
 
@@ -22,9 +23,24 @@ export const userRouter: Router = express.Router();
 // @desc        Get users
 // @access      Private
 
-userRouter.get('/', async (req: Request, res: Response) => {
+userRouter.get('/', AuthMiddleware, async (req: Request, res: Response) => {
     try {
-        const users: Array<IUser> = await UserService.getUsers();
+        const users: Array<IUser> = await UserService.getAllUsers();
+        res.json(users);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).json({ msg: INTERNAL_SERVER_ERROR });
+    }
+});
+
+// @route       GET api/user/loggedInUser
+// @desc        Get users
+// @access      Private
+
+userRouter.get('/loggedInUser', AuthMiddleware, async (req: AuthRequest, res: Response) => {
+    try {
+        let userId: string = req.user?.id ? req.user?.id : '';
+        const users: Array<IUser> = await UserService.getUserById(userId);
         res.json(users);
     } catch (err) {
         console.error(err.message);
@@ -73,3 +89,18 @@ userRouter.post('/', [
             res.status(500).json({ msg: INTERNAL_SERVER_ERROR });
         }
     });
+
+// @route       DELETE api/user
+// @desc        Delete user
+// @access      Private
+
+userRouter.delete('/', AuthMiddleware, async (req: Request, res: Response) => {
+    try {
+        const { _id } = req.body;
+        await UserService.deleteUser(_id);
+        res.json({ deleted: _id });
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).json({ msg: INTERNAL_SERVER_ERROR });
+    }
+});

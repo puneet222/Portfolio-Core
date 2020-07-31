@@ -3,9 +3,17 @@ import { UserType } from "../routes/routes.interface";
 import User, { IUser } from "../models/User";
 
 class UserService {
-    static getUsers() {
+    static getAllUsers() {
         try {
             return User.find({});
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    static getUserById(userId: string) {
+        try {
+            return User.find({ _id: userId }).select('-password');
         } catch (error) {
             throw error;
         }
@@ -35,7 +43,7 @@ class UserService {
 
     static deleteUser(_id: string) {
         try {
-
+            return User.deleteOne({ _id })
         } catch (error) {
             throw error;
         }
