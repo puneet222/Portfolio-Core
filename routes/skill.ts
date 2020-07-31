@@ -1,19 +1,20 @@
 import express, { Router, Request, Response } from "express";
 import { INTERNAL_SERVER_ERROR, UPDATE_SUCCESS } from "../appConstants";
-import Skill, { ISkill } from "../models/Skill";
+import { ISkill } from "../models/Skill";
 import AuthMiddleware from "../middleware/auth";
-import { SkillType } from "./routes.interface";
+import { SkillType, AuthRequest } from "./routes.interface";
 import SkillService from "../services/skillService";
 
 export const skillRouter: Router = express.Router();
 
 // @route       GET api/skill
 // @desc        Get Skills
-// @access      public
+// @access      private
 
-skillRouter.get('/', async (req: Request, res: Response) => {
+skillRouter.get('/', AuthMiddleware, async (req: AuthRequest, res: Response) => {
     try {
-        const skills: Array<ISkill> = await SkillService.getSkills();
+        let userId: string = req.user?.id ? req.user?.id : '';
+        const skills: Array<ISkill> = await SkillService.getSkills(userId);
         res.json(skills);
     } catch (err) {
         console.error(err.message);
@@ -25,9 +26,10 @@ skillRouter.get('/', async (req: Request, res: Response) => {
 // @desc        Create Skill
 // @access      private
 
-skillRouter.post('/', AuthMiddleware, async (req: Request, res: Response) => {
+skillRouter.post('/', AuthMiddleware, async (req: AuthRequest, res: Response) => {
     try {
         const skillData: SkillType = req.body;
+        skillData.user = req.user?.id;
         const skill: ISkill = await SkillService.createSkill(skillData);
         res.json(skill);
     } catch (err) {

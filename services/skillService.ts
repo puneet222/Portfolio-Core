@@ -2,9 +2,9 @@ import { SkillType } from "../routes/routes.interface";
 import Skill, { ISkill } from "../models/Skill";
 
 class SkillService {
-    static getSkills() {
+    static getSkills(userId: string) {
         try {
-            return Skill.find({});
+            return Skill.find({ user: userId });
         } catch (error) {
             throw error;
         }

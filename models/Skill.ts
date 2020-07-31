@@ -1,17 +1,21 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
 export interface ISkill extends Document {
-    email: string;
+    user: string;
     name: string;
-    password: string;
+    proficiency: number;
+    imageLink: string;
 }
 
 // Declare the Schema of the Mongo model
 const skillSchema: Schema = new Schema({
+    user: {
+        type: Schema.Types.ObjectId,
+        required: true
+    },
     name: {
         type: String,
         required: true,
-        unique: true,
     },
     proficiency: {
         type: Number,

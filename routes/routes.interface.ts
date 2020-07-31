@@ -75,6 +75,7 @@ export interface ProjectType {
 }
 
 export interface SkillType {
+    user?: string;
     name: string;
     proficiency: number;
     imageLink: string;

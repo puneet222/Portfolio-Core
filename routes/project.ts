@@ -1,6 +1,6 @@
 import express, { Router, Request, Response } from "express";
 import { INTERNAL_SERVER_ERROR, UPDATE_SUCCESS } from "../appConstants";
-import Project, { IProject } from "../models/Project";
+import { IProject } from "../models/Project";
 import AuthMiddleware from "../middleware/auth";
 import { ProjectType, AuthRequest } from "./routes.interface";
 import ProjectService from "../services/projectService";
