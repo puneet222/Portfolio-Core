@@ -2,7 +2,7 @@ import express, { Router, Request, Response } from 'express';
 import { INTERNAL_SERVER_ERROR, UPDATE_SUCCESS } from "../appConstants";
 import { ICertificate } from "../models/Certificate";
 import AuthMiddleware from "../middleware/auth";
-import { CertificateType } from './routes.interface';
+import { CertificateType, AuthRequest } from './routes.interface';
 import CertificateService from '../services/certificateService';
 
 export const certificateRouter: Router = express.Router();
@@ -10,11 +10,12 @@ export const certificateRouter: Router = express.Router();
 
 // @route       GET api/certificate
 // @desc        Get Certificates
-// @access      public
+// @access      private
 
-certificateRouter.get('/', async (req: Request, res: Response) => {
+certificateRouter.get('/', AuthMiddleware, async (req: AuthRequest, res: Response) => {
     try {
-        let certificates: Array<ICertificate> = await CertificateService.getAllCertificates();
+        let userId: string = req.user?.id ? req.user?.id : '';
+        let certificates: Array<ICertificate> = await CertificateService.getAllCertificates(userId);
         res.send(certificates);
     } catch (error) {
         console.error(error.message);
@@ -26,26 +27,10 @@ certificateRouter.get('/', async (req: Request, res: Response) => {
 // @desc        Create Certificate
 // @access      private
 
-certificateRouter.post('/', AuthMiddleware, async (req: Request, res: Response) => {
+certificateRouter.post('/', AuthMiddleware, async (req: AuthRequest, res: Response) => {
     try {
-        const {
-            name,
-            link,
-            imageLink,
-            source,
-            issueDate,
-            validTill
-        } = req.body;
-
-        const certificateData: CertificateType = {
-            name,
-            link,
-            imageLink,
-            source,
-            issueDate,
-            validTill
-        }
-
+        const certificateData: CertificateType = req.body;
+        certificateData.user = req.user?.id;
         const certificate: ICertificate = await CertificateService.createCertificate(certificateData);
         res.json(certificate);
     } catch (error) {
@@ -60,25 +45,7 @@ certificateRouter.post('/', AuthMiddleware, async (req: Request, res: Response) 
 
 certificateRouter.put('/', AuthMiddleware, async (req: Request, res: Response) => {
     try {
-        const {
-            name,
-            link,
-            imageLink,
-            source,
-            issueDate,
-            validTill,
-            _id
-        } = req.body;
-
-        const newData: CertificateType = {
-            name,
-            link,
-            imageLink,
-            source,
-            issueDate,
-            validTill,
-            _id
-        }
+        const newData: CertificateType = req.body;
         await CertificateService.updateCertificate(newData);
         res.json({ msg: UPDATE_SUCCESS });
     } catch (err) {

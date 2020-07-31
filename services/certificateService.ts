@@ -2,9 +2,9 @@ import Certificate, { ICertificate } from "../models/Certificate";
 import { CertificateType } from "../routes/routes.interface";
 
 class CertificateService {
-    static getAllCertificates() {
+    static getAllCertificates(userId: string) {
         try {
-            return Certificate.find({});
+            return Certificate.find({ user: userId });
         } catch (err) {
             throw err;
         }

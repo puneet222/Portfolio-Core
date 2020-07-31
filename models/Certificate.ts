@@ -1,6 +1,8 @@
 import mongoose, { Schema, Document } from 'mongoose';
+import { IUser } from './User';
 
 export interface ICertificate extends Document {
+    user: string;
     email: string;
     name: string;
     password: string;
@@ -8,10 +10,13 @@ export interface ICertificate extends Document {
 
 // Declare the Schema of the Mongo model
 const certificateSchema: Schema = new Schema({
+    user: {
+        type: Schema.Types.ObjectId,
+        required: true
+    },
     name: {
         type: String,
         required: true,
-        unique: true,
     },
     source: {
         type: String,
@@ -26,11 +31,9 @@ const certificateSchema: Schema = new Schema({
     },
     link: {
         type: String,
-        required: true,
     },
     imageLink: {
         type: String,
-        required: true,
     }
 });
 

@@ -22,6 +22,7 @@ export interface AuthResponse {
 }
 
 export interface CertificateType {
+    user?: string;
     name: string;
     link: string;
     imageLink?: string;
