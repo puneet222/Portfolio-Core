@@ -62,6 +62,7 @@ export interface JobType {
 }
 
 export interface ProjectType {
+    user?: string;
     name: string;
     info: string;
     tech: Array<string>;

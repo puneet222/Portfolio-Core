@@ -2,18 +2,19 @@ import express, { Router, Request, Response } from "express";
 import { INTERNAL_SERVER_ERROR, UPDATE_SUCCESS } from "../appConstants";
 import Project, { IProject } from "../models/Project";
 import AuthMiddleware from "../middleware/auth";
-import { ProjectType } from "./routes.interface";
+import { ProjectType, AuthRequest } from "./routes.interface";
 import ProjectService from "../services/projectService";
 
 export const projectRouter: Router = express.Router();
 
 // @route       GET api/project
 // @desc        Get Projects
-// @access      public
+// @access      private
 
-projectRouter.get('/', async (req: Request, res: Response) => {
+projectRouter.get('/', AuthMiddleware, async (req: AuthRequest, res: Response) => {
     try {
-        const projects: Array<IProject> = await ProjectService.getProjects();
+        let userId: string = req.user?.id ? req.user?.id : '';
+        const projects: Array<IProject> = await ProjectService.getProjects(userId);
         res.json(projects);
     } catch (err) {
         console.error(err.message);
@@ -25,9 +26,10 @@ projectRouter.get('/', async (req: Request, res: Response) => {
 // @desc        Create Project
 // @access      private
 
-projectRouter.post('/', AuthMiddleware, async (req: Request, res: Response) => {
+projectRouter.post('/', AuthMiddleware, async (req: AuthRequest, res: Response) => {
     try {
         const projectData: ProjectType = req.body;
+        projectData.user = req.user?.id;
         const project: IProject = await ProjectService.createProject(projectData);
         res.json(project);
     } catch (err) {

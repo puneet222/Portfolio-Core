@@ -2,9 +2,9 @@ import { ProjectType } from "../routes/routes.interface";
 import Project, { IProject } from "../models/Project";
 
 class ProjectService {
-    static getProjects() {
+    static getProjects(userId: string) {
         try {
-            return Project.find({});
+            return Project.find({ user: userId });
         } catch (error) {
             throw error;
         }

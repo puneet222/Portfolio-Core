@@ -1,6 +1,7 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
 export interface IProject extends Document {
+    user: string;
     name: string;
     info: string;
     tech: Array<string>;
@@ -13,6 +14,10 @@ export interface IProject extends Document {
 
 // Declare the Schema of the Mongo model
 const projectSchema: Schema = new Schema({
+    user: {
+        type: Schema.Types.ObjectId,
+        required: true
+    },
     name: {
         type: String,
         required: true,
