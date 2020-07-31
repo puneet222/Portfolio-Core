@@ -1,12 +1,17 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
 export interface IHits extends Document {
+    user: string;
     hits: number;
     lastUpdated?: Date;
 }
 
 // Declare the Schema of the Mongo model
 const hitsSchema: Schema = new Schema({
+    user: {
+        type: Schema.Types.ObjectId,
+        required: true
+    },
     hits: {
         type: Number,
         required: true,

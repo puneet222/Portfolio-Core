@@ -2,18 +2,17 @@ import Hits, { IHits } from "../models/Hits";
 import { HitsType } from "../routes/routes.interface";
 
 class HitsService {
-    static getHits() {
+    static getHits(userId: string) {
         try {
-            return Hits.find({});
+            return Hits.find({ user: userId });
         } catch (error) {
             throw error;
         }
     }
 
-    static async updateHits() {
+    static async updateHits(userId: string) {
         try {
-            const hitsData: Array<IHits> = await Hits.find({});
-            let hits: IHits = new Hits({ hits: 1 });;
+            const hitsData: Array<IHits> = await Hits.find({ user: userId });
             if (hitsData.length > 0) {
                 let updatedHits: IHits['hits'] = hitsData[0]["hits"] + 1;
                 let _id: string = hitsData[0]["_id"];
@@ -22,6 +21,7 @@ class HitsService {
                 }
                 return Hits.findOneAndUpdate({ _id }, newData, { upsert: true });
             } else {
+                let hits: IHits = new Hits({ hits: 1, user: userId });;
                 return hits.save();
             }
         } catch (error) {

@@ -3,16 +3,18 @@ import { INTERNAL_SERVER_ERROR, UPDATE_SUCCESS } from "../appConstants";
 import { IHits } from "../models/Hits";
 import AuthMiddleware from "../middleware/auth";
 import HitsService from '../services/hitsService';
+import { AuthRequest } from './routes.interface';
 
 export const hitsRouter: Router = express.Router();
 
 // @route       GET api/hits
 // @desc        Get Hits
-// @access      public
+// @access      private
 
-hitsRouter.get('/', async (req: Request, res: Response) => {
+hitsRouter.get('/', AuthMiddleware, async (req: AuthRequest, res: Response) => {
     try {
-        const hits: Array<IHits> = await HitsService.getHits();
+        let userId: string = req.user?.id ? req.user?.id : '';
+        const hits: Array<IHits> = await HitsService.getHits(userId);
         res.json(hits);
     } catch (err) {
         console.error(err.message);
@@ -22,11 +24,12 @@ hitsRouter.get('/', async (req: Request, res: Response) => {
 
 // @route       POST api/hits
 // @desc        Create/Update(Increment) Hits
-// @access      public
+// @access      private
 
-hitsRouter.post('/', async (req: Request, res: Response) => {
+hitsRouter.post('/', AuthMiddleware, async (req: AuthRequest, res: Response) => {
     try {
-        await HitsService.updateHits();
+        let userId: string = req.user?.id ? req.user?.id : '';
+        await HitsService.updateHits(userId);
         res.json({ msg: UPDATE_SUCCESS });
     } catch (err) {
         console.error(err.message);

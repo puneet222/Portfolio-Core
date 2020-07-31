@@ -33,6 +33,7 @@ export interface CertificateType {
 }
 
 export interface HitsType {
+    user?: string;
     hits: number;
 }
 
