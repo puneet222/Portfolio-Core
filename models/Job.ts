@@ -1,6 +1,7 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
 export interface IJob extends Document {
+    user: string;
     company: string;
     role: string;
     startDate: Date;
@@ -12,6 +13,10 @@ export interface IJob extends Document {
 
 // Declare the Schema of the Mongo model
 const jobSchema: Schema = new Schema({
+    user: {
+        type: Schema.Types.ObjectId,
+        required: true
+    },
     company: {
         type: String,
         required: true,

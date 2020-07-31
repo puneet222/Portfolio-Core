@@ -1,19 +1,20 @@
 import express, { Router, Request, Response } from 'express';
 import { INTERNAL_SERVER_ERROR, UPDATE_SUCCESS } from "../appConstants";
-import Job, { IJob } from "../models/Job";
+import { IJob } from "../models/Job";
 import AuthMiddleware from "../middleware/auth";
-import { JobType } from './routes.interface';
+import { JobType, AuthRequest } from './routes.interface';
 import JobService from '../services/jobService';
 
 export const jobRouter: Router = express.Router();
 
 // @route       GET api/job
 // @desc        Get Jobs
-// @access      public
+// @access      private
 
-jobRouter.get('/', async (req: Request, res: Response) => {
+jobRouter.get('/', AuthMiddleware, async (req: AuthRequest, res: Response) => {
     try {
-        const jobs: Array<IJob> = await JobService.getJobs();
+        let userId: string = req.user?.id ? req.user?.id : '';
+        const jobs: Array<IJob> = await JobService.getJobs(userId);
         res.json(jobs);
     } catch (err) {
         console.error(err.message);
@@ -25,9 +26,10 @@ jobRouter.get('/', async (req: Request, res: Response) => {
 // @desc        Create Job
 // @access      private
 
-jobRouter.post('/', AuthMiddleware, async (req: Request, res: Response) => {
+jobRouter.post('/', AuthMiddleware, async (req: AuthRequest, res: Response) => {
     try {
         const jobData: JobType = req.body;
+        jobData.user = req.user?.id;
         const job: IJob = await JobService.createJob(jobData);
         res.json(job);
     } catch (err) {

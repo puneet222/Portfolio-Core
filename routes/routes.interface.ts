@@ -50,6 +50,7 @@ export interface InfoType {
 }
 
 export interface JobType {
+    user?: string;
     company: string;
     role: string;
     startDate: Date;

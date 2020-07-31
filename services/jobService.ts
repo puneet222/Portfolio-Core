@@ -2,9 +2,9 @@ import { JobType } from "../routes/routes.interface";
 import Job, { IJob } from "../models/Job";
 
 class JobService {
-    static getJobs() {
+    static getJobs(userId: string) {
         try {
-            return Job.find({});
+            return Job.find({ user: userId });
         } catch (error) {
             throw error
         }
