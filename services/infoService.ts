@@ -2,9 +2,9 @@ import Info, { IInfo } from "../models/Info";
 import { InfoType } from "../routes/routes.interface";
 
 class InfoService {
-    static getInfos() {
+    static getInfos(userId: string) {
         try {
-            return Info.find({}).sort({ date: -1 });
+            return Info.find({ user: userId }).sort({ date: -1 });
         } catch (error) {
             throw error;
         }

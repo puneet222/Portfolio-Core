@@ -37,6 +37,7 @@ export interface HitsType {
 }
 
 export interface InfoType {
+    user?: string;
     email: string;
     name: string;
     phone: string;

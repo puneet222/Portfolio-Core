@@ -17,7 +17,6 @@ export const authRouter: Router = express.Router();
 
 authRouter.get('/', AuthMiddleware, async (req: AuthRequest, res: Response) => {
     try {
-        console.log(req.user);
         const id: string = _.get(req.user, `[id]`, "");
         const user: IUser | null = await AuthService.getUserById(id);
         res.json(user);

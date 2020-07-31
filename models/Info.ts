@@ -1,6 +1,7 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
 export interface IInfo extends Document {
+    user: string;
     email: string;
     name: string;
     phone: string;
@@ -14,6 +15,10 @@ export interface IInfo extends Document {
 
 // Declare the Schema of the Mongo model
 const InfoSchema: Schema = new Schema({
+    user: {
+        type: Schema.Types.ObjectId,
+        required: true
+    },
     name: {
         type: String,
         required: true,

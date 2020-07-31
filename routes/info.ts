@@ -2,18 +2,19 @@ import express, { Router, Request, Response } from 'express';
 import { INTERNAL_SERVER_ERROR, UPDATE_SUCCESS } from "../appConstants";
 import { IInfo } from "../models/Info";
 import AuthMiddleware from "../middleware/auth";
-import { InfoType } from './routes.interface';
+import { InfoType, AuthRequest } from './routes.interface';
 import InfoService from '../services/infoService';
 
 export const infoRouter: Router = express.Router();
 
 // @route       GET api/info
 // @desc        Get Infos
-// @access      public
+// @access      private
 
-infoRouter.get('/', async (req: Request, res: Response) => {
+infoRouter.get('/', AuthMiddleware, async (req: AuthRequest, res: Response) => {
     try {
-        const infos: Array<IInfo> = await InfoService.getInfos();
+        let userId: string = req.user?.id ? req.user?.id : '';
+        const infos: Array<IInfo> = await InfoService.getInfos(userId);
         res.json(infos);
     } catch (err) {
         console.error(err.message);
@@ -25,9 +26,10 @@ infoRouter.get('/', async (req: Request, res: Response) => {
 // @desc        Create Info
 // @access      private
 
-infoRouter.post('/', AuthMiddleware, async (req: Request, res: Response) => {
+infoRouter.post('/', AuthMiddleware, async (req: AuthRequest, res: Response) => {
     try {
         const infoData: InfoType = req.body;
+        infoData.user = req.user?.id;
         const info: IInfo = await InfoService.createInfo(infoData);
         res.json(info);
     } catch (err) {

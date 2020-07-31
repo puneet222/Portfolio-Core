@@ -12,8 +12,7 @@ import {
     EMAIL,
     PASSWORD
 } from "../appConstants";
-import User, { IUser } from '../models/User';
-import AuthMiddleware from '../middleware/auth';
+import { IUser } from '../models/User';
 import UserService from '../services/userService';
 import { UserType, JWTPayload } from './routes.interface';
 
