@@ -5,7 +5,10 @@
   "main": "server.js",
   "scripts": {
     "start": "tsc && node ./dist/server.js",
-    "server": "tsc && nodemon ./dist/server.js"
+    "server": "tsc -p tsconfig.json && nodemon ./dist/server.js",
+    "client": "npm start --prefix client",
+    "clientinstall": "npm install --prefix client",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
   },
   "author": "",
   "license": "ISC",
