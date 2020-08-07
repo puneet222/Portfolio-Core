@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useContext } from 'react';
 import { Button } from 'antd';
 import './App.scss';
-import { LIGHT_THEME, DARK_THEME } from './app.constants';
+import { LIGHT_THEME } from './app.constants';
+import ThemeContext from './context/theme/themeContext';
 
 declare global {
   interface Window {
@@ -11,23 +12,26 @@ declare global {
 
 const App = () => {
 
-  const [theme, setTheme] = useState(LIGHT_THEME)
+  const themeContext = useContext(ThemeContext);
 
-  const toggleTheme = () => {
+  const { theme, toggleTheme } = themeContext;
+
+  // const [theme, setTheme] = useState(LIGHT_THEME)
+
+  const changeTheme = () => {
     if (theme === LIGHT_THEME) {
-      document.body.classList.add('dark');
-      setTheme(DARK_THEME);
-    } else {
       document.body.classList.remove('dark');
-      setTheme(LIGHT_THEME)
+    } else {
+      document.body.classList.add('dark');
     }
+    toggleTheme();
   }
 
   return (
     <div className="App">
       <header className="App-header">
         <h3>Testing 1 2 3</h3>
-        <Button type="primary" onClick={toggleTheme}>Button</Button>
+        <Button type="ghost" onClick={changeTheme}>Test</Button>
       </header>
     </div >
   );
