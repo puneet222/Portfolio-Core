@@ -9,6 +9,4 @@ const ThemeContext: React.Context<ThemeContextType> = createContext<ThemeContext
     toggleTheme: () => { }
 });
 
-// export const ThemeContextProvider = ThemeContext.Provider;
-// export const ThemeContextConsumer = ThemeContext.Consumer;
 export default ThemeContext;
