@@ -31,6 +31,7 @@ const App = () => {
           unCheckedChildren={<BulbFilled className="bulb-text" />}
           onClick={changeTheme}
           className={theme === DARK_THEME ? "dark-background" : ""}
+          data-testid="theme-switch"
         />
       </div>
       <p>Current {theme}</p>

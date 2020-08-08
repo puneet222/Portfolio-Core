@@ -11,10 +11,10 @@ describe('App Tests', () => {
     });
 
     it('should change the theme', () => {
-        const { getByText } = render(<ThemeState><App /></ThemeState>);
-        fireEvent.click(getByText("Test"));
+        const { getByTestId } = render(<ThemeState><App /></ThemeState>);
+        fireEvent.click(getByTestId("theme-switch"));
         expect(document.body.classList.contains('dark')).toBeTruthy();
-        fireEvent.click(getByText("Test"));
+        fireEvent.click(getByTestId("theme-switch"));
         expect(document.body.classList.contains('dark')).toBeFalsy();
     });
 });
