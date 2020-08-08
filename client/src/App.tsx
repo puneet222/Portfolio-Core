@@ -1,7 +1,8 @@
 import React, { useContext, useEffect } from 'react';
-import { Button } from 'antd';
+import { Switch } from 'antd';
+import { StarFilled, BulbFilled } from '@ant-design/icons';
 import './App.scss';
-import { LIGHT_THEME } from './app.constants';
+import { LIGHT_THEME, DARK_THEME } from './app.constants';
 import ThemeContext from './context/theme/themeContext';
 
 const App = () => {
@@ -24,10 +25,15 @@ const App = () => {
 
   return (
     <div className="App">
-      <header className="App-header">
-        <p>Current {theme}</p>
-        <Button type="ghost" onClick={changeTheme}>Test</Button>
-      </header>
+      <div className="theme-toggle">
+        <Switch
+          checkedChildren={<StarFilled className="star-text" />}
+          unCheckedChildren={<BulbFilled className="bulb-text" />}
+          onClick={changeTheme}
+          className={theme === DARK_THEME ? "dark-background" : ""}
+        />
+      </div>
+      <p>Current {theme}</p>
     </div >
   );
 }
