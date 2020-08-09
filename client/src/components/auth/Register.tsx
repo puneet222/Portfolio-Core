@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import { Form, Input, Button } from 'antd';
-import { Store } from 'antd/lib/form/interface';
 import ThemeContext from '../../context/theme/ThemeContext';
+import AuthContext from '../../context/auth/AuthContext';
 import './auth.scss';
 import { DARK_THEME } from '../../app.constants';
 import {
@@ -11,13 +11,21 @@ import {
     NO_CONFIRM_PASSWORD_MESSAGE,
     PASSWORD_NOT_MATCH_MESSAGE
 } from './auth.contants';
+import { RegisterUserDataType } from '../../context/auth/interface';
+import { Store } from 'antd/lib/form/interface';
 
 export const Register = () => {
 
     const { theme } = useContext(ThemeContext);
 
+    const { registerUser } = useContext(AuthContext);
+
     const onFinish = (values: Store) => {
-        console.log('Success:', values);
+        if (registerUser) {
+            registerUser({
+                ...values
+            });
+        }
     };
 
     const onFinishFailed = (errorInfo: any) => {

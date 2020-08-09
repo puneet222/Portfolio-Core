@@ -15,10 +15,17 @@ const App = () => {
   const { theme } = themeContext;
 
   useEffect(() => {
+    var metaThemeColor: Element | null = document.querySelector("meta[name=theme-color]");
     if (theme === LIGHT_THEME) {
       document.body.classList.remove('dark');
+      if (metaThemeColor) {
+        metaThemeColor.setAttribute("content", '#FFFFFF');
+      }
     } else {
       document.body.classList.add('dark');
+      if (metaThemeColor) {
+        metaThemeColor.setAttribute("content", '#1d1d1d');
+      }
     }
   });
 
