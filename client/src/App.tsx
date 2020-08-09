@@ -6,6 +6,7 @@ import ThemeContext from './context/theme/ThemeContext';
 import AuthState from './context/auth/AuthState';
 import ThemeToggle from './components/theme/ThemeToggle';
 import { Register } from './components/auth/Register';
+import { Login } from './components/auth/Login';
 
 const App = () => {
 
@@ -18,8 +19,6 @@ const App = () => {
       document.body.classList.remove('dark');
     } else {
       document.body.classList.add('dark');
-      document.body.classList.add('stars');
-      document.body.classList.add('twinkling');
     }
   });
 
@@ -31,6 +30,7 @@ const App = () => {
           <div className="container">
             <Switch>
               <Route exact path="/register" component={Register} />
+              <Route exact path="/login" component={Login} />
             </Switch>
           </div>
         </div >
