@@ -2,9 +2,9 @@ import React, { useReducer } from "react";
 import ThemeReducer from './themeReducer';
 import { LIGHT_THEME } from "../../app.constants"
 import { TOGGLE_THEME } from "../types";
-import ThemeContext from "./themeContext";
+import ThemeContext from "./ThemeContext";
 
-const ThemeState = (props: any) => {
+const ThemeState: React.FunctionComponent = props => {
     const initialState: string = LIGHT_THEME;
 
     const [state, dispatch] = useReducer(ThemeReducer, initialState);
