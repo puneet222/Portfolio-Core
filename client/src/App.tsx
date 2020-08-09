@@ -18,6 +18,8 @@ const App = () => {
       document.body.classList.remove('dark');
     } else {
       document.body.classList.add('dark');
+      document.body.classList.add('stars');
+      document.body.classList.add('twinkling');
     }
   });
 
@@ -26,7 +28,6 @@ const App = () => {
       <Router>
         <div className="App">
           <ThemeToggle />
-          <p>Current {theme}</p>
           <div className="container">
             <Switch>
               <Route exact path="/register" component={Register} />

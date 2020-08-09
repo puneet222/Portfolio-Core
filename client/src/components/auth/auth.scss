@@ -1,0 +1,50 @@
+@import url('https://fonts.googleapis.com/css2?family=Monoton&display=swap');
+@import '../../colors';
+
+.form-container {
+    max-width: 400px;
+    display: inline-flex;
+}
+
+.login-form {
+    width: 350px;
+}
+
+.register-button {
+    width: 100%;
+    background: $primary-color;
+    border: none;
+    &.dark{
+        background: $primary-color-dark-gradient;
+    }
+    transition: background 0.9s;
+}
+
+.form-input {
+    &.dark{
+        background-color: #2d2d2d;
+        color: white;
+        border: #2d2d2d;
+    }
+}
+
+.form-label {
+    margin: 0px;
+    font-weight: 400;
+    &.dark {
+        color: white;
+    }
+}
+
+.app-title {
+    font-size: 3em;
+    font-family: 'Monoton', cursive;
+    color: $primary-color;
+    &.dark {
+        color: $primary-color-dark
+    }
+}
+
+.app-title-div {
+    margin: 5% 2%;
+}
