@@ -15,10 +15,10 @@ projectRouter.get('/', AuthMiddleware, async (req: AuthRequest, res: Response) =
     try {
         let userId: string = req.user?.id ? req.user?.id : '';
         const projects: Array<IProject> = await ProjectService.getProjects(userId);
-        res.json(projects);
+        return res.json(projects);
     } catch (err) {
         console.error(err.message);
-        res.status(500).json({ msg: INTERNAL_SERVER_ERROR });
+        return res.status(500).json({ msg: INTERNAL_SERVER_ERROR });
     }
 });
 
@@ -31,10 +31,10 @@ projectRouter.post('/', AuthMiddleware, async (req: AuthRequest, res: Response) 
         const projectData: ProjectType = req.body;
         projectData.user = req.user?.id;
         const project: IProject = await ProjectService.createProject(projectData);
-        res.json(project);
+        return res.json(project);
     } catch (err) {
         console.error(err.message);
-        res.status(500).json({ msg: INTERNAL_SERVER_ERROR });
+        return res.status(500).json({ msg: INTERNAL_SERVER_ERROR });
     }
 });
 
@@ -46,10 +46,10 @@ projectRouter.put('/', AuthMiddleware, async (req: Request, res: Response) => {
     try {
         const newData: ProjectType = req.body;
         await ProjectService.updateProject(newData);
-        res.json({ msg: UPDATE_SUCCESS });
+        return res.json({ msg: UPDATE_SUCCESS });
     } catch (err) {
         console.error(err.message);
-        res.status(500).json({ msg: INTERNAL_SERVER_ERROR });
+        return res.status(500).json({ msg: INTERNAL_SERVER_ERROR });
     }
 });
 
@@ -61,9 +61,9 @@ projectRouter.delete('/', AuthMiddleware, async (req: Request, res: Response) =>
     try {
         const { _id } = req.body;
         await ProjectService.deleteProject(_id);
-        res.json({ deleted: _id });
+        return res.json({ deleted: _id });
     } catch (err) {
         console.error(err.message);
-        res.status(500).json({ msg: INTERNAL_SERVER_ERROR });
+        return res.status(500).json({ msg: INTERNAL_SERVER_ERROR });
     }
 });

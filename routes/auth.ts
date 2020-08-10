@@ -19,10 +19,10 @@ authRouter.get('/', AuthMiddleware, async (req: AuthRequest, res: Response) => {
     try {
         const id: string = _.get(req.user, `[id]`, "");
         const user: IUser | null = await AuthService.getUserById(id);
-        res.json(user);
+        return res.json(user);
     } catch (err) {
         console.error(err.message);
-        res.status(500).json({ msg: INTERNAL_SERVER_ERROR });
+        return res.status(500).json({ msg: INTERNAL_SERVER_ERROR });
     }
 });
 
@@ -48,12 +48,12 @@ authRouter.post('/', [
         let user: UserType | undefined;
         if (auth) {
             if (!auth.isAuthenticated) {
-                res.status(400).json({ msg: INVALID_CREDENTIALS });
+                return res.status(400).json({ msg: INVALID_CREDENTIALS });
             } else {
                 user = auth.user;
             }
         } else {
-            res.status(500).json({ msg: INTERNAL_SERVER_ERROR });
+            return res.status(500).json({ msg: INTERNAL_SERVER_ERROR });
         }
 
         if (user && user.id) {
@@ -69,11 +69,11 @@ authRouter.post('/', [
                 res.json({ token });
             });
         } else {
-            res.status(500).json({ msg: INTERNAL_SERVER_ERROR });
+            return res.status(500).json({ msg: INTERNAL_SERVER_ERROR });
         }
 
     } catch (err) {
         console.error(err.message);
-        res.status(500).json({ msg: INTERNAL_SERVER_ERROR });
+        return res.status(500).json({ msg: INTERNAL_SERVER_ERROR });
     }
 });

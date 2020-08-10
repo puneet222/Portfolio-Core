@@ -15,10 +15,10 @@ skillRouter.get('/', AuthMiddleware, async (req: AuthRequest, res: Response) => 
     try {
         let userId: string = req.user?.id ? req.user?.id : '';
         const skills: Array<ISkill> = await SkillService.getSkills(userId);
-        res.json(skills);
+        return res.json(skills);
     } catch (err) {
         console.error(err.message);
-        res.status(500).json({ msg: INTERNAL_SERVER_ERROR });
+        return res.status(500).json({ msg: INTERNAL_SERVER_ERROR });
     }
 });
 
@@ -31,10 +31,10 @@ skillRouter.post('/', AuthMiddleware, async (req: AuthRequest, res: Response) =>
         const skillData: SkillType = req.body;
         skillData.user = req.user?.id;
         const skill: ISkill = await SkillService.createSkill(skillData);
-        res.json(skill);
+        return res.json(skill);
     } catch (err) {
         console.error(err.message);
-        res.status(500).json({ msg: INTERNAL_SERVER_ERROR });
+        return res.status(500).json({ msg: INTERNAL_SERVER_ERROR });
     }
 });
 
@@ -46,10 +46,10 @@ skillRouter.put('/', AuthMiddleware, async (req: Request, res: Response) => {
     try {
         const newData: SkillType = req.body;
         await SkillService.updateSkill(newData);
-        res.json({ msg: UPDATE_SUCCESS });
+        return res.json({ msg: UPDATE_SUCCESS });
     } catch (err) {
         console.error(err.message);
-        res.status(500).json({ msg: INTERNAL_SERVER_ERROR });
+        return res.status(500).json({ msg: INTERNAL_SERVER_ERROR });
     }
 });
 
@@ -61,9 +61,9 @@ skillRouter.delete('/', AuthMiddleware, async (req: Request, res: Response) => {
     try {
         const { _id } = req.body;
         await SkillService.deleteSkill(_id);
-        res.json({ deleted: _id });
+        return res.json({ deleted: _id });
     } catch (err) {
         console.error(err.message);
-        res.status(500).json({ msg: INTERNAL_SERVER_ERROR });
+        return res.status(500).json({ msg: INTERNAL_SERVER_ERROR });
     }
 });

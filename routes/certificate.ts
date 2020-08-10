@@ -16,10 +16,10 @@ certificateRouter.get('/', AuthMiddleware, async (req: AuthRequest, res: Respons
     try {
         let userId: string = req.user?.id ? req.user?.id : '';
         let certificates: Array<ICertificate> = await CertificateService.getAllCertificates(userId);
-        res.send(certificates);
+        return res.send(certificates);
     } catch (error) {
         console.error(error.message);
-        res.status(500).json({ msg: INTERNAL_SERVER_ERROR });
+        return res.status(500).json({ msg: INTERNAL_SERVER_ERROR });
     }
 });
 
@@ -32,10 +32,10 @@ certificateRouter.post('/', AuthMiddleware, async (req: AuthRequest, res: Respon
         const certificateData: CertificateType = req.body;
         certificateData.user = req.user?.id;
         const certificate: ICertificate = await CertificateService.createCertificate(certificateData);
-        res.json(certificate);
+        return res.json(certificate);
     } catch (error) {
         console.error(error.message);
-        res.status(500).json({ msg: INTERNAL_SERVER_ERROR });
+        return res.status(500).json({ msg: INTERNAL_SERVER_ERROR });
     }
 });
 
@@ -47,10 +47,10 @@ certificateRouter.put('/', AuthMiddleware, async (req: Request, res: Response) =
     try {
         const newData: CertificateType = req.body;
         await CertificateService.updateCertificate(newData);
-        res.json({ msg: UPDATE_SUCCESS });
+        return res.json({ msg: UPDATE_SUCCESS });
     } catch (err) {
         console.error(err.message);
-        res.status(500).json({ msg: INTERNAL_SERVER_ERROR });
+        return res.status(500).json({ msg: INTERNAL_SERVER_ERROR });
     }
 });
 
@@ -62,9 +62,9 @@ certificateRouter.delete('/', AuthMiddleware, async (req: Request, res: Response
     try {
         const { _id } = req.body;
         await CertificateService.deleteCertificate(_id);
-        res.json({ deleted: _id });
+        return res.json({ deleted: _id });
     } catch (err) {
         console.error(err.message);
-        res.status(500).json({ msg: INTERNAL_SERVER_ERROR });
+        return res.status(500).json({ msg: INTERNAL_SERVER_ERROR });
     }
 });

@@ -15,10 +15,10 @@ infoRouter.get('/', AuthMiddleware, async (req: AuthRequest, res: Response) => {
     try {
         let userId: string = req.user?.id ? req.user?.id : '';
         const infos: Array<IInfo> = await InfoService.getInfos(userId);
-        res.json(infos);
+        return res.json(infos);
     } catch (err) {
         console.error(err.message);
-        res.status(500).json({ msg: INTERNAL_SERVER_ERROR });
+        return res.status(500).json({ msg: INTERNAL_SERVER_ERROR });
     }
 });
 
@@ -31,10 +31,10 @@ infoRouter.post('/', AuthMiddleware, async (req: AuthRequest, res: Response) => 
         const infoData: InfoType = req.body;
         infoData.user = req.user?.id;
         const info: IInfo = await InfoService.createInfo(infoData);
-        res.json(info);
+        return res.json(info);
     } catch (err) {
         console.error(err.message);
-        res.status(500).json({ msg: INTERNAL_SERVER_ERROR });
+        return res.status(500).json({ msg: INTERNAL_SERVER_ERROR });
     }
 });
 
@@ -46,10 +46,10 @@ infoRouter.put('/', AuthMiddleware, async (req: Request, res: Response) => {
     try {
         const infoData: InfoType = req.body; // implicit object destructuring
         await InfoService.updateInfo(infoData);
-        res.json({ msg: UPDATE_SUCCESS });
+        return res.json({ msg: UPDATE_SUCCESS });
     } catch (err) {
         console.error(err.message);
-        res.status(500).json({ msg: INTERNAL_SERVER_ERROR });
+        return res.status(500).json({ msg: INTERNAL_SERVER_ERROR });
     }
 });
 
@@ -61,9 +61,9 @@ infoRouter.delete('/', AuthMiddleware, async (req: Request, res: Response) => {
     try {
         const { _id } = req.body;
         await InfoService.deleteInfo(_id);
-        res.json({ deleted: _id });
+        return res.json({ deleted: _id });
     } catch (err) {
         console.error(err.message);
-        res.status(500).json({ msg: INTERNAL_SERVER_ERROR });
+        return res.status(500).json({ msg: INTERNAL_SERVER_ERROR });
     }
 });

@@ -15,10 +15,10 @@ hitsRouter.get('/', AuthMiddleware, async (req: AuthRequest, res: Response) => {
     try {
         let userId: string = req.user?.id ? req.user?.id : '';
         const hits: Array<IHits> = await HitsService.getHits(userId);
-        res.json(hits);
+        return res.json(hits);
     } catch (err) {
         console.error(err.message);
-        res.status(500).json({ msg: INTERNAL_SERVER_ERROR });
+        return res.status(500).json({ msg: INTERNAL_SERVER_ERROR });
     }
 });
 
@@ -30,10 +30,10 @@ hitsRouter.post('/', AuthMiddleware, async (req: AuthRequest, res: Response) => 
     try {
         let userId: string = req.user?.id ? req.user?.id : '';
         await HitsService.updateHits(userId);
-        res.json({ msg: UPDATE_SUCCESS });
+        return res.json({ msg: UPDATE_SUCCESS });
     } catch (err) {
         console.error(err.message);
-        res.status(500).json({ msg: INTERNAL_SERVER_ERROR });
+        return res.status(500).json({ msg: INTERNAL_SERVER_ERROR });
     }
 });
 
@@ -46,9 +46,9 @@ hitsRouter.delete('/', AuthMiddleware, async (req: Request, res: Response) => {
     try {
         const { _id } = req.body;
         await HitsService.deleteHits(_id);
-        res.json({ deleted: _id });
+        return res.json({ deleted: _id });
     } catch (err) {
         console.error(err.message);
-        res.status(500).json({ msg: INTERNAL_SERVER_ERROR });
+        return res.status(500).json({ msg: INTERNAL_SERVER_ERROR });
     }
 });

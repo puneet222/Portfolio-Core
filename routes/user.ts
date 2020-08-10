@@ -26,10 +26,10 @@ export const userRouter: Router = express.Router();
 userRouter.get('/', AuthMiddleware, async (req: Request, res: Response) => {
     try {
         const users: Array<IUser> = await UserService.getAllUsers();
-        res.json(users);
+        return res.json(users);
     } catch (err) {
         console.error(err.message);
-        res.status(500).json({ msg: INTERNAL_SERVER_ERROR });
+        return res.status(500).json({ msg: INTERNAL_SERVER_ERROR });
     }
 });
 
@@ -41,10 +41,10 @@ userRouter.get('/loggedInUser', AuthMiddleware, async (req: AuthRequest, res: Re
     try {
         let userId: string = req.user?.id ? req.user?.id : '';
         const users: Array<IUser> = await UserService.getUserById(userId);
-        res.json(users);
+        return res.json(users);
     } catch (err) {
         console.error(err.message);
-        res.status(500).json({ msg: INTERNAL_SERVER_ERROR });
+        return res.status(500).json({ msg: INTERNAL_SERVER_ERROR });
     }
 });
 
@@ -81,12 +81,12 @@ userRouter.post('/', [
                 expiresIn: 3600000
             }, (err, token) => {
                 if (err) throw err;
-                res.json({ token })
+                return res.json({ token })
             });
 
         } catch (error) {
             console.error(error.message);
-            res.status(500).json({ msg: INTERNAL_SERVER_ERROR });
+            return res.status(500).json({ msg: INTERNAL_SERVER_ERROR });
         }
     });
 
@@ -98,9 +98,9 @@ userRouter.delete('/', AuthMiddleware, async (req: Request, res: Response) => {
     try {
         const { _id } = req.body;
         await UserService.deleteUser(_id);
-        res.json({ deleted: _id });
+        return res.json({ deleted: _id });
     } catch (err) {
         console.error(err.message);
-        res.status(500).json({ msg: INTERNAL_SERVER_ERROR });
+        return res.status(500).json({ msg: INTERNAL_SERVER_ERROR });
     }
 });
