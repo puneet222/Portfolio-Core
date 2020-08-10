@@ -1,4 +1,5 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect, useState } from 'react';
+import { RouteComponentProps } from 'react-router-dom';
 import { Form, Input, Button } from 'antd';
 import { Store } from 'antd/lib/form/interface';
 import ThemeContext from '../../context/theme/ThemeContext';
@@ -10,16 +11,29 @@ import {
 } from './auth.contants';
 import AuthContext from '../../context/auth/AuthContext';
 import { AuthContextType } from '../../context/auth/interface';
+import { Loader } from '../common/Loader';
 
-export const Login = () => {
+export const Login: React.SFC<RouteComponentProps> = (props) => {
 
     const { theme } = useContext(ThemeContext);
 
     const authContext: AuthContextType = useContext(AuthContext);
 
+    const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        if (authContext.isAuthenticated) {
+            props.history.push("/");
+        }
+        setLoading(authContext.loading);
+    }, [authContext.isAuthenticated, authContext.loading, props.history]);
+
     const onFinish = (values: Store) => {
         console.log('Success:', values);
         if (authContext.authenticateUser) {
+            if (authContext.updateLoading) {
+                authContext.updateLoading(true);
+            }
             authContext.authenticateUser({
                 ...values
             });
@@ -67,8 +81,8 @@ export const Login = () => {
                             className={`register-button ${theme === DARK_THEME ? "dark" : ""}`}
                             htmlType="submit"
                         >
-                            Login
-                    </Button>
+                            {loading ? <Loader /> : 'Login'}
+                        </Button>
                     </Form.Item>
                 </Form>
             </div>

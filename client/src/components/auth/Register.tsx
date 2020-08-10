@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Form, Input, Button } from 'antd';
 import ThemeContext from '../../context/theme/ThemeContext';
 import AuthContext from '../../context/auth/AuthContext';
@@ -13,16 +13,31 @@ import {
     MIN_PASSWORD_MESSAGE
 } from './auth.contants';
 import { Store } from 'antd/lib/form/interface';
+import { AuthContextType } from '../../context/auth/interface';
+import { RouteComponentProps } from 'react-router-dom';
+import { Loader } from '../common/Loader';
 
-export const Register = () => {
+export const Register: React.SFC<RouteComponentProps> = (props) => {
 
     const { theme } = useContext(ThemeContext);
 
-    const { registerUser } = useContext(AuthContext);
+    const authContext: AuthContextType = useContext(AuthContext);
+
+    const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        if (authContext.isAuthenticated) {
+            props.history.push("/");
+        }
+        setLoading(authContext.loading);
+    }, [authContext.isAuthenticated, authContext.loading, props.history]);
 
     const onFinish = (values: Store) => {
-        if (registerUser) {
-            registerUser({
+        if (authContext.registerUser) {
+            if (authContext.updateLoading) {
+                authContext.updateLoading(true);
+            }
+            authContext.registerUser({
                 ...values
             });
         }
@@ -98,8 +113,8 @@ export const Register = () => {
                             className={`register-button ${theme === DARK_THEME ? "dark" : ""}`}
                             htmlType="submit"
                         >
-                            Register
-                    </Button>
+                            {loading ? <Loader /> : 'Register'}
+                        </Button>
                     </Form.Item>
                 </Form>
             </div>

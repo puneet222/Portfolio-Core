@@ -14,7 +14,8 @@ import {
   LOAD_USER_FAIL,
   LOGIN_USER,
   LOGIN_FAILED,
-  LOGOUT
+  LOGOUT,
+  UPDATE_LOADING
 } from "../types";
 
 const config = {
@@ -103,6 +104,17 @@ const AuthState: React.FunctionComponent = props => {
     });
   };
 
+  // loading
+
+  const updateLoading = (value: boolean) => {
+    dispatch({
+      type: UPDATE_LOADING,
+      payload: {
+        loading: value
+      }
+    });
+  }
+
   return (<AuthContext.Provider
     value={{
       isAuthenticated: state.isAuthenticated,
@@ -113,7 +125,8 @@ const AuthState: React.FunctionComponent = props => {
       registerUser,
       authenticateUser,
       logout,
-      clearErrors
+      clearErrors,
+      updateLoading
     }}
   >
     {props.children}

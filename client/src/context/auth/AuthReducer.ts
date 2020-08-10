@@ -6,7 +6,8 @@ import {
     LOAD_USER_FAIL,
     LOGIN_USER,
     LOGIN_FAILED,
-    LOGOUT
+    LOGOUT,
+    UPDATE_LOADING
 } from "../types";
 import { AuthState, AuthActionType } from "./interface";
 
@@ -69,8 +70,15 @@ const AuthReducer = (state: AuthState, action: AuthActionType): AuthState => {
         case CLEAR_ERRORS: {
             return {
                 ...state,
-                error: null
+                error: null,
+                loading: false
             };
+        }
+        case UPDATE_LOADING: {
+            return {
+                ...state,
+                loading: action.payload ? action.payload.loading ? action.payload.loading : false : false
+            }
         }
         default:
             return state;

@@ -24,6 +24,7 @@ export interface AuthContextType {
     authenticateUser?: (data: any) => Promise<void>;
     logout?: () => void;
     clearErrors?: () => void;
+    updateLoading?: (data: boolean) => void;
 }
 
 export interface AuthActionType {
@@ -32,6 +33,7 @@ export interface AuthActionType {
         user?: any;
         token?: string;
         error?: string;
+        loading?: boolean;
     }
 }
 
