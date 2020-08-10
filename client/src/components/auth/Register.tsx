@@ -9,9 +9,9 @@ import {
     INVALID_EMAIL_MESSAGE,
     NO_PASSWORD_MESSAGE,
     NO_CONFIRM_PASSWORD_MESSAGE,
-    PASSWORD_NOT_MATCH_MESSAGE
+    PASSWORD_NOT_MATCH_MESSAGE,
+    MIN_PASSWORD_MESSAGE
 } from './auth.contants';
-import { RegisterUserDataType } from '../../context/auth/interface';
 import { Store } from 'antd/lib/form/interface';
 
 export const Register = () => {
@@ -67,7 +67,10 @@ export const Register = () => {
                         name='password'
                         label={<h3 className={`form-label ${theme === DARK_THEME ? "dark" : ""}`}>Password</h3>}
                         hasFeedback
-                        rules={[{ required: true, message: NO_PASSWORD_MESSAGE }]}
+                        rules={[
+                            { required: true, message: NO_PASSWORD_MESSAGE },
+                            { type: "string", min: 6, message: MIN_PASSWORD_MESSAGE }
+                        ]}
                     >
                         <Input type="password" className={`form-input ${theme === DARK_THEME ? "dark" : ""}`} />
                     </Form.Item>

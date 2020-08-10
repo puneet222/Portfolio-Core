@@ -13,13 +13,14 @@ import { AuthState, AuthActionType } from "./interface";
 const AuthReducer = (state: AuthState, action: AuthActionType): AuthState => {
     switch (action.type) {
         case REGISTER_USER: {
-            debugger;
             setToken(action);
             return {
                 ...state,
+                user: action.payload ? action.payload.user : null,
                 isAuthenticated: true,
                 error: null,
-                loading: false
+                loading: false,
+                token: action.payload ? action.payload.token ? action.payload.token : "" : ""
             };
         }
         case LOAD_USER: {
@@ -37,7 +38,8 @@ const AuthReducer = (state: AuthState, action: AuthActionType): AuthState => {
                 ...state,
                 isAuthenticated: true,
                 loading: false,
-                error: null
+                error: null,
+                token: action.payload ? action.payload.token ? action.payload.token : "" : ""
             };
         }
         case LOGOUT: {

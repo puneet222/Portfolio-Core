@@ -4,7 +4,7 @@ import AuthReducer from "./AuthReducer";
 import axios, { AxiosResponse } from "axios";
 
 import setHeaderToken from "../../utils/setHeaderToken";
-import { initialState } from "./interface";
+import { initialState, User, RegisterUserDataType } from "./interface";
 
 import {
   REGISTER_USER,
@@ -29,30 +29,22 @@ const AuthState: React.FunctionComponent = props => {
 
   // authenticate user
 
-  /* const authenticateUser = async formData => {
-    const config = {
-      headers: {
-        "Content-type": "application/json"
-      }
-    };
-    if (localStorage.token) {
-      setHeaderToken(localStorage.token);
-    }
+  const authenticateUser = async (formData: RegisterUserDataType) => {
     try {
-      const res = await axios.post("/api/auth", formData, config);
+      const res: AxiosResponse = await axios.post("/api/auth", formData, config);
       dispatch({
         type: LOGIN_USER,
-        payload: res.data
+        payload: { user: res.data }
       });
       loadUser();
     } catch (err) {
       console.log("ERROR : ", err);
       dispatch({
         type: LOGIN_FAILED,
-        payload: err.response.data
+        payload: { error: err.response.data.msg }
       });
     }
-  }; */
+  };
 
   // load user
 
@@ -62,54 +54,54 @@ const AuthState: React.FunctionComponent = props => {
     }
 
     try {
-      const res = await axios.get("/api/auth", config);
-
+      const res: AxiosResponse<User> = await axios.get("/api/auth", config);
       dispatch({
         type: LOAD_USER,
-        payload: res.data
+        payload: { user: res.data }
       });
     } catch (err) {
       console.log("ERROR : ", err.response.data);
       dispatch({
         type: LOAD_USER_FAIL,
-        payload: err.response.data
+        payload: { error: err.response.data.msg }
       });
     }
   };
 
   // register user
 
-  const registerUser = async (formData: any) => {
+  const registerUser = async (formData: RegisterUserDataType) => {
     try {
       const res: AxiosResponse = await axios.post("/api/user", formData, config);
       dispatch({
         type: REGISTER_USER,
         payload: res.data
       });
+      loadUser();
     } catch (err) {
       console.log("ERROR : ", err.response.data);
       dispatch({
         type: REGISTER_FAIL,
-        payload: err.response.data
+        payload: { error: err.response.data.msg }
       });
     }
   };
 
   // logout
 
-  /* const logout = () => {
+  const logout = () => {
     dispatch({
       type: LOGOUT
     });
-  }; */
+  };
 
   // clear errors
 
-  /* const clearErrors = () => {
+  const clearErrors = () => {
     dispatch({
       type: CLEAR_ERRORS
     });
-  }; */
+  };
 
   return (<AuthContext.Provider
     value={{
@@ -118,7 +110,10 @@ const AuthState: React.FunctionComponent = props => {
       loading: state.loading,
       token: state.token,
       error: state.error,
-      registerUser
+      registerUser,
+      authenticateUser,
+      logout,
+      clearErrors
     }}
   >
     {props.children}

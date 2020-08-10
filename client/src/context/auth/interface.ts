@@ -1,7 +1,13 @@
 import { Store } from "antd/lib/form/interface";
 
+export interface User {
+    name: string;
+    email: string;
+    password?: string;
+    _id?: string;
+}
 export interface AuthState {
-    user: any;
+    user: User | null;
     isAuthenticated: boolean;
     token: string | null;
     error: string | null;
@@ -9,12 +15,15 @@ export interface AuthState {
 }
 
 export interface AuthContextType {
-    user: any;
+    user: User | null;
     isAuthenticated: boolean;
     token: string | null;
     error: string | null;
     loading: boolean;
     registerUser?: (data: any) => Promise<void>;
+    authenticateUser?: (data: any) => Promise<void>;
+    logout?: () => void;
+    clearErrors?: () => void;
 }
 
 export interface AuthActionType {
@@ -31,7 +40,7 @@ export const initialState: AuthState = {
     isAuthenticated: false,
     token: localStorage.getItem("token"),
     error: null,
-    loading: true
+    loading: false
 };
 
 export interface RegisterUserDataType extends Store {

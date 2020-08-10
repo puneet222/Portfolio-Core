@@ -8,13 +8,22 @@ import {
     INVALID_EMAIL_MESSAGE,
     NO_PASSWORD_MESSAGE,
 } from './auth.contants';
+import AuthContext from '../../context/auth/AuthContext';
+import { AuthContextType } from '../../context/auth/interface';
 
 export const Login = () => {
 
     const { theme } = useContext(ThemeContext);
 
+    const authContext: AuthContextType = useContext(AuthContext);
+
     const onFinish = (values: Store) => {
         console.log('Success:', values);
+        if (authContext.authenticateUser) {
+            authContext.authenticateUser({
+                ...values
+            });
+        }
     };
 
     const onFinishFailed = (errorInfo: any) => {
