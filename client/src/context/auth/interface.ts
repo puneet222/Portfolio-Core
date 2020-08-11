@@ -30,7 +30,7 @@ export interface AuthContextType {
 export interface AuthActionType {
     type: string;
     payload?: {
-        user?: any;
+        user?: User;
         token?: string;
         error?: string;
         loading?: boolean;

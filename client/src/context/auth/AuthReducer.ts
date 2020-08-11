@@ -17,7 +17,7 @@ const AuthReducer = (state: AuthState, action: AuthActionType): AuthState => {
             setToken(action);
             return {
                 ...state,
-                user: action.payload ? action.payload.user : null,
+                user: action.payload ? action.payload.user ? action.payload.user : null : null,
                 isAuthenticated: true,
                 error: null,
                 loading: false,
@@ -30,7 +30,7 @@ const AuthReducer = (state: AuthState, action: AuthActionType): AuthState => {
                 isAuthenticated: true,
                 loading: false,
                 error: null,
-                user: action.payload ? action.payload.user : null
+                user: action.payload ? action.payload.user ? action.payload.user : null : null
             };
         }
         case LOGIN_USER: {
