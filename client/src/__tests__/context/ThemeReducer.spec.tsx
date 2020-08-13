@@ -1,7 +1,7 @@
-import ThemeReducer from "../../../context/theme/themeReducer";
-import { LIGHT_THEME, DARK_THEME } from "../../../app.constants";
-import { TOGGLE_THEME } from "../../../context/types";
-import { DefaultAction } from "../../../context/theme/interface";
+import ThemeReducer from "../../context/theme/themeReducer";
+import { LIGHT_THEME, DARK_THEME } from "../../app.constants";
+import { TOGGLE_THEME } from "../../context/types";
+import { DefaultAction } from "../../context/theme/interface";
 
 describe('Theme Context Tests [Reducer]', () => {
     it('should toggle the theme', () => {

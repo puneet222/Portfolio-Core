@@ -3,12 +3,12 @@ import { RouteComponentProps } from 'react-router-dom';
 import { Form, Input, Button, message } from 'antd';
 import { Store } from 'antd/lib/form/interface';
 import ThemeContext from '../../context/theme/ThemeContext';
-import './auth.scss';
 import { DARK_THEME } from '../../app.constants';
 import { INVALID_EMAIL_MESSAGE, NO_PASSWORD_MESSAGE } from './auth.contants';
 import AuthContext from '../../context/auth/AuthContext';
 import { AuthContextType } from '../../context/auth/interface';
 import { Loader } from '../common/Loader';
+import './auth.scss';
 
 export const Login: React.SFC<RouteComponentProps> = (props) => {
 
