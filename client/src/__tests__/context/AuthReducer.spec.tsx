@@ -1,5 +1,5 @@
 import { AuthState, User, AuthActionType } from "../../context/auth/interface";
-import { REGISTER_USER, LOAD_USER, LOGIN_USER, LOGOUT } from "../../context/types";
+import { REGISTER_USER, LOAD_USER, LOGIN_USER, LOGOUT, CLEAR_ERRORS, UPDATE_LOADING, LOGIN_FAILED, REGISTER_FAIL, LOAD_USER_FAIL } from "../../context/types";
 import AuthReducer from "../../context/auth/AuthReducer";
 
 const initialState: AuthState = {
@@ -69,6 +69,63 @@ describe('It should Test complete Auth Reducer', () => {
             type: LOGOUT
         }
         expect(AuthReducer(authStateWithData, action)).toEqual(expectedState);
+    });
+
+    it("should clear Errors", () => {
+        let updatedInitialState: AuthState = { ...initialState };
+        updatedInitialState.error = "Invalid Credentials";
+        let action: AuthActionType = {
+            type: CLEAR_ERRORS
+        }
+        expect(AuthReducer(updatedInitialState, action)).toEqual(initialState);
+    });
+
+    it("should update the Loading state", () => {
+        let action: AuthActionType = {
+            type: UPDATE_LOADING,
+            payload: {
+                loading: true
+            }
+        };
+        let expectedState: AuthState = { ...initialState, loading: true };
+        expect(AuthReducer(initialState, action)).toEqual(expectedState);
+    });
+
+    it("should fail the Login attempt", () => {
+        let error: string = "Invalid Credentials";
+        let expectedState: AuthState = { ...initialState, error };
+        let action: AuthActionType = {
+            type: LOGIN_FAILED,
+            payload: {
+                error
+            }
+        }
+        expect(AuthReducer(initialState, action)).toEqual(expectedState);
+    });
+
+    it("should fail the Register attempt of the user", () => {
+        let error: string = "User already exits";
+        let expectedState: AuthState = { ...initialState, error };
+        let action: AuthActionType = {
+            type: REGISTER_FAIL,
+            payload: {
+                error
+            }
+        };
+        expect(AuthReducer(initialState, action)).toEqual(expectedState);
+    });
+
+    it("should fail to load the user", () => {
+        let error: string = "Error occurred while loading the user";
+        let expectedState: AuthState = { ...initialState, error };
+        let updatedInitialState = { ...authStateWithData };
+        let action: AuthActionType = {
+            type: LOAD_USER_FAIL,
+            payload: {
+                error
+            }
+        };
+        expect(AuthReducer(updatedInitialState, action)).toEqual(expectedState);
     });
 
 });
