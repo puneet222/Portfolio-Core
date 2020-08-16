@@ -35,7 +35,7 @@ const AuthState: React.FunctionComponent = props => {
       const res: AxiosResponse = await axios.post("/api/auth", formData, config);
       dispatch({
         type: LOGIN_USER,
-        payload: { user: res.data }
+        payload: { token: res.data.token }
       });
       loadUser();
     } catch (err) {

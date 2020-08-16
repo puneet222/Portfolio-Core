@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { RouteComponentProps } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { Form, Input, Button, message } from 'antd';
 import { Store } from 'antd/lib/form/interface';
 import ThemeContext from '../../context/theme/ThemeContext';
@@ -10,7 +10,7 @@ import { AuthContextType } from '../../context/auth/interface';
 import { Loader } from '../common/Loader';
 import './auth.scss';
 
-export const Login: React.SFC<RouteComponentProps> = (props) => {
+export const Login = () => {
 
     const { theme } = useContext(ThemeContext);
 
@@ -18,18 +18,19 @@ export const Login: React.SFC<RouteComponentProps> = (props) => {
 
     const [loading, setLoading] = useState(false);
 
+    const history = useHistory();
+
     useEffect(() => {
         if (authContext.error) {
-            message.error(authContext.error, 2, authContext.clearErrors);
+            message.error(authContext.error, 50, authContext.clearErrors);
         }
         if (authContext.isAuthenticated) {
-            props.history.push("/");
+            history.push("/");
         }
         setLoading(authContext.loading);
-    }, [authContext.isAuthenticated, authContext.loading, authContext.error, authContext.clearErrors, props.history]);
+    }, [authContext.isAuthenticated, authContext.loading, authContext.error, authContext.clearErrors, history]);
 
     const onFinish = (values: Store) => {
-        console.log('Success:', values);
         if (authContext.authenticateUser) {
             if (authContext.updateLoading) {
                 authContext.updateLoading(true);
@@ -57,17 +58,18 @@ export const Login: React.SFC<RouteComponentProps> = (props) => {
                         name='email'
                         label={<h3 className={`form-label ${theme === DARK_THEME ? "dark" : ""}`}>Email</h3>}
                         rules={[{ required: true, message: INVALID_EMAIL_MESSAGE, type: 'email' }]}>
-                        <Input className={`form-input ${theme === DARK_THEME ? "dark" : ""}`} />
+                        <Input data-testid="email" className={`form-input ${theme === DARK_THEME ? "dark" : ""}`} />
                     </Form.Item>
                     <Form.Item
                         name='password'
                         label={<h3 className={`form-label ${theme === DARK_THEME ? "dark" : ""}`}>Password</h3>}
                         rules={[{ required: true, message: NO_PASSWORD_MESSAGE }]}>
-                        <Input type="password" className={`form-input ${theme === DARK_THEME ? "dark" : ""}`} />
+                        <Input type="password" data-testid="password" className={`form-input ${theme === DARK_THEME ? "dark" : ""}`} />
                     </Form.Item>
                     <Form.Item>
                         <Button
                             type="primary"
+                            data-testid="submit"
                             className={`register-button ${theme === DARK_THEME ? "dark" : ""}`}
                             htmlType="submit">
                             {loading ? <Loader /> : 'Login'}

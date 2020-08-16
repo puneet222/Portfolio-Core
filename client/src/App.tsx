@@ -7,6 +7,7 @@ import AuthState from './context/auth/AuthState';
 import ThemeToggle from './components/theme/ThemeToggle';
 import { Register } from './components/auth/Register';
 import { Login } from './components/auth/Login';
+import { Home } from './components/Home';
 
 const App = () => {
 
@@ -36,6 +37,7 @@ const App = () => {
           <ThemeToggle />
           <div className="container">
             <Switch>
+              <Route exact path="/" component={Home} />
               <Route exact path="/register" component={Register} />
               <Route exact path="/login" component={Login} />
             </Switch>

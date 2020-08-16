@@ -34,6 +34,7 @@ const AuthReducer = (state: AuthState, action: AuthActionType): AuthState => {
             };
         }
         case LOGIN_USER: {
+            debugger;
             setToken(action);
             return {
                 ...state,

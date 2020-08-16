@@ -14,10 +14,10 @@ import {
 } from './auth.contants';
 import { Store } from 'antd/lib/form/interface';
 import { AuthContextType } from '../../context/auth/interface';
-import { RouteComponentProps } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { Loader } from '../common/Loader';
 
-export const Register: React.SFC<RouteComponentProps> = (props) => {
+export const Register = () => {
 
     const { theme } = useContext(ThemeContext);
 
@@ -25,15 +25,17 @@ export const Register: React.SFC<RouteComponentProps> = (props) => {
 
     const [loading, setLoading] = useState(false);
 
+    const history = useHistory();
+
     useEffect(() => {
         if (authContext.error) {
             message.error(authContext.error, 2, authContext.clearErrors);
         }
         if (authContext.isAuthenticated) {
-            props.history.push("/");
+            history.push("/");
         }
         setLoading(authContext.loading);
-    }, [authContext.isAuthenticated, authContext.loading, authContext.error, authContext.clearErrors, props.history]);
+    }, [authContext.isAuthenticated, authContext.loading, authContext.error, authContext.clearErrors, history]);
 
     const onFinish = (values: Store) => {
         if (authContext.registerUser) {
