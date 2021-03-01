@@ -10,7 +10,8 @@ import {
     NO_PASSWORD_MESSAGE,
     NO_CONFIRM_PASSWORD_MESSAGE,
     PASSWORD_NOT_MATCH_MESSAGE,
-    MIN_PASSWORD_MESSAGE
+    MIN_PASSWORD_MESSAGE,
+    NO_EMAIL_MESSAGE
 } from './auth.contants';
 import { Store } from 'antd/lib/form/interface';
 import { AuthContextType } from '../../context/auth/interface';
@@ -65,13 +66,13 @@ export const Register = () => {
                         name='name'
                         label={<h3 className={`form-label ${theme === DARK_THEME ? "dark" : ""}`}>Name</h3>}
                         rules={[{ required: true, message: NO_NAME_MESSAGE }]}>
-                        <Input className={`form-input ${theme === DARK_THEME ? "dark" : ""}`} />
+                        <Input data-testid="name" className={`form-input ${theme === DARK_THEME ? "dark" : ""}`} />
                     </Form.Item>
                     <Form.Item
                         name='email'
                         label={<h3 className={`form-label ${theme === DARK_THEME ? "dark" : ""}`}>Email</h3>}
-                        rules={[{ required: true, message: INVALID_EMAIL_MESSAGE, type: 'email' }]}>
-                        <Input className={`form-input ${theme === DARK_THEME ? "dark" : ""}`} />
+                        rules={[{ required: true, message: NO_EMAIL_MESSAGE }, { message: INVALID_EMAIL_MESSAGE, type: 'email' }]}>
+                        <Input data-testid="email" className={`form-input ${theme === DARK_THEME ? "dark" : ""}`} />
                     </Form.Item>
                     <Form.Item
                         name='password'
@@ -81,7 +82,7 @@ export const Register = () => {
                             { required: true, message: NO_PASSWORD_MESSAGE },
                             { type: "string", min: 6, message: MIN_PASSWORD_MESSAGE }
                         ]}>
-                        <Input type="password" className={`form-input ${theme === DARK_THEME ? "dark" : ""}`} />
+                        <Input data-testid="password" type="password" className={`form-input ${theme === DARK_THEME ? "dark" : ""}`} />
                     </Form.Item>
                     <Form.Item
                         name='password2'
@@ -99,10 +100,11 @@ export const Register = () => {
                                         return Promise.reject(PASSWORD_NOT_MATCH_MESSAGE);
                                     },
                                 })]}>
-                        <Input type="password" className={`form-input ${theme === DARK_THEME ? "dark" : ""}`} />
+                        <Input data-testid="password2" type="password" className={`form-input ${theme === DARK_THEME ? "dark" : ""}`} />
                     </Form.Item>
                     <Form.Item>
                         <Button
+                            data-testid="submit-button"
                             type="primary"
                             className={`register-button ${theme === DARK_THEME ? "dark" : ""}`}
                             htmlType="submit">

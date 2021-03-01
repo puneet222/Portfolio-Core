@@ -1,4 +1,5 @@
 export const NO_NAME_MESSAGE: string = "Name is Required!";
+export const NO_EMAIL_MESSAGE: string = "Email is Required!";
 export const INVALID_EMAIL_MESSAGE: string = "Please enter valid email!";
 export const NO_PASSWORD_MESSAGE: string = "Password is Required!";
 export const MIN_PASSWORD_MESSAGE: string = "Password should be minimum length 6";
